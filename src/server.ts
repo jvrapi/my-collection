@@ -2,6 +2,8 @@ import { ApolloServer } from 'apollo-server';
 import path from 'node:path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
+import { Container } from 'typedi';
+import { registerContainers } from './container';
 import { ErrorInterceptor as formatError } from './middlewares/ErrorInterceptor';
 import { UserResolver } from './resolvers/user-resolver';
 
@@ -10,9 +12,10 @@ async function main(){
   const schema = await buildSchema({
     resolvers: [UserResolver],
     emitSchemaFile: path.resolve(__dirname, './schema.gql'),
-    // globalMiddlewares: [ErrorInterceptor]
+    container: Container
   })
 
+  registerContainers()
 
   const server = new ApolloServer({
     schema,
@@ -25,8 +28,5 @@ async function main(){
 
   console.log(`🚀 Server ready on ${url} 🚀`)
 }
-
-
-
 
 main()
