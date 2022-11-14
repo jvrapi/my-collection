@@ -1,35 +1,29 @@
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
-import { ApolloServer } from 'apollo-server-express';
-import http from 'node:http';
+import { ApolloServer } from 'apollo-server';
 import path from 'node:path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { UserResolver } from './graphql/resolvers/user-resolver';
-import { app } from './http/app';
+import { ErrorInterceptor as formatError } from './middlewares/ErrorInterceptor';
+import { UserResolver } from './resolvers/user-resolver';
 
 async function main(){
 
   const schema = await buildSchema({
     resolvers: [UserResolver],
-    emitSchemaFile: path.resolve(__dirname, './graphql/schema.gql')
+    emitSchemaFile: path.resolve(__dirname, './schema.gql'),
+    // globalMiddlewares: [ErrorInterceptor]
   })
 
-  const httpServer = http.createServer(app)
 
   const server = new ApolloServer({
     schema,
-    plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
+    context: async ({req}) => ({token: req.headers.authorization}),
+    formatError,
   })
 
-  await server.start()
+ const {url}= await server.listen()
   
-  server.applyMiddleware({ app });
 
-  await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
-
-
-
-  console.log(`🚀 Server ready on http://localhost:4000${server.graphqlPath} 🚀`)
+  console.log(`🚀 Server ready on ${url} 🚀`)
 }
 
 
