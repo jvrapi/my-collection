@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  database:
+    image: mysql
+    container_name: my_collection_database
+    environment:
+      - MYSQL_DATABASE=my_collection
+      - MYSQL_ROOT_PASSWORD=4adf05ec
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  api:
+    build: .
+    container_name: my_collection_api
+    ports:
+      - 4000:4000
+    volumes: 
+      - .:/usr/app
+    depends_on:
+      - database
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.1.0/24
