@@ -23,8 +23,7 @@ async function main(){
     formatError,
   })
 
- const {url}= await server.listen()
-  
+  const {url}= await server.listen()
 
   console.log(`🚀 Server ready on ${url} 🚀`)
 }
