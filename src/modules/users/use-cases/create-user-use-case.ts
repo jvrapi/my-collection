@@ -17,7 +17,7 @@ export class CreateUserUseCase{
 
     const userAlreadyExists = await this.usersRepository.findByEmailOrUsername(email, username)
 
-    if(userAlreadyExists?.length >0){
+    if(userAlreadyExists){
       throw new ApiError('Users already exists!')
     }
 
@@ -29,6 +29,8 @@ export class CreateUserUseCase{
       password: passwordHashed,
       username
     })
+
+    delete userCreated.password
 
     return userCreated
   }

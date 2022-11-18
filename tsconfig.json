@@ -12,6 +12,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictPropertyInitialization": false,
-    "skipLibCheck": true 
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "outDir": "dist",
   }
 }

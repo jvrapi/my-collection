@@ -12,16 +12,6 @@ services:
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-  api:
-    build: .
-    container_name: my_collection_api
-    ports:
-      - 4000:4000
-    volumes: 
-      - .:/usr/app
-    depends_on:
-      - database
-
 volumes:
   db:
     driver: local

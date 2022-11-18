@@ -1,3 +1,6 @@
+import { User } from "@prisma/client"
+import { Optional } from "../../../types/partial"
+
 export interface CreateUser{
   name: string
   email: string
@@ -5,13 +8,10 @@ export interface CreateUser{
   password: string
 }
 
-export type User = CreateUser & {
-  id: string
-  createdAt: Date
-  updatedAt: Date
-}
+export type UserCreated = Optional<User, 'password'> 
+
 
 export interface UsersRepository {
-  findByEmailOrUsername(email: string, username: string): Promise<User[]>
-  create(user: CreateUser): Promise<User>
+  findByEmailOrUsername(email: string, username: string): Promise<User | null>
+  create(user: CreateUser): Promise<UserCreated>
 }

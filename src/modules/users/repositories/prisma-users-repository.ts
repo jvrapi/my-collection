@@ -1,11 +1,12 @@
-import { prisma } from "../../../prisma";
-import { CreateUser, User, UsersRepository } from "./users-repository";
+import { User } from "@prisma/client";
+import { prisma } from "../../../database/prisma";
+import { CreateUser,  UsersRepository } from "./users-repository";
 
 export class PrismaUsersRepository implements UsersRepository {
    
   
-   findByEmailOrUsername(email: string, username: string): Promise<User[]> {
-   return  prisma.user.findMany({
+  findByEmailOrUsername(email: string, username: string): Promise<User | null> {
+    return  prisma.user.findFirst({
     where: {
       OR: [
         {
@@ -28,7 +29,6 @@ export class PrismaUsersRepository implements UsersRepository {
   create(user: CreateUser): Promise<User> {
     return prisma.user.create({
       data: user,
-      
     })
   }
 
