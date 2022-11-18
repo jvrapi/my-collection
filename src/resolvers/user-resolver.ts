@@ -3,7 +3,7 @@ import { Inject, Service } from 'typedi';
 import { CreateUserInput } from "../dtos/inputs/create-user-input";
 import { User } from "../dtos/models/users-model";
 import { EnsureAuthenticated } from "../middlewares/EnsureAuthenticated";
-import { CreateUserUseCase } from "../modules/use-cases/create-user-use-case";
+import { CreateUserUseCase } from "../modules/users/use-cases/create-user-use-case";
 @Service()
 @Resolver()
 export class UserResolver {

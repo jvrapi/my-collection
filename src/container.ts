@@ -1,5 +1,5 @@
 import Container from "typedi"
-import { PrismaUsersRepository } from "./modules/repositories/prisma-users-repository"
+import { PrismaUsersRepository } from "./modules/users/repositories/prisma-users-repository"
 import { BcryptPasswordProvider } from "./providers/password-provider/bcrypt-password-provider"
 
 export const registerContainers = () => {
