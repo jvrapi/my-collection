@@ -17,6 +17,7 @@ describe('[unit] Create user', () => {
     passwordProvider = new BcryptPasswordProvider()
     createUserUseCase = new CreateUserUseCase(usersRepository, passwordProvider)
   })
+  
   it('should be able to create a new user', async () => {
     const user = await createUserUseCase.execute({
       email: 'zalari@fozorat.bd',
@@ -26,5 +27,45 @@ describe('[unit] Create user', () => {
     })
 
     expect(user).toHaveProperty('id')
+  })
+
+  it('should not be able to create a user with same email', async () => {
+    const sameEmail = 'zalari@fozorat.bd' 
+    
+    
+    await createUserUseCase.execute({
+      email: sameEmail,
+      name: 'Peter Tate',
+      password: '2exyrQcg',
+      username: 'dudvxVzgJB'
+    })
+
+    await expect(createUserUseCase.execute({
+      email: sameEmail,
+      name: 'Catherine Patterson',
+      password: '2exyrQcg',
+      username: 'SHqdqjGAOb'
+    })).rejects.toThrowError()
+
+  })
+
+  it('should not be able to create a user with same username', async () => {
+    const sameUsername = 'pNoHfGjvJP' 
+    
+    
+    await createUserUseCase.execute({
+      email: 'opaug@inhug.bi',
+      name: 'Carolyn Watson',
+      password: '2exyrQcg',
+      username: sameUsername
+    })
+
+    await expect(createUserUseCase.execute({
+      email: 'garweja@fazbil.vi',
+      name: 'Etta Smith',
+      password: '2exyrQcg',
+      username: sameUsername
+    })).rejects.toThrowError()
+
   })
  })

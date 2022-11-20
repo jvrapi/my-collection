@@ -1,7 +1,4 @@
-import gql from 'graphql-tag'
-
-
-export const createUserQuery = gql`
+export const createUserQuery = `
   mutation CreateUser($data: CreateUserInput!) {
     createUser(data: $data) {
       id
