@@ -1,42 +1,34 @@
-import { ApolloServer } from 'apollo-server-express'
-import {Server} from '../../../app'
-
-const createUserQuery = `
-  mutation CreateUser($data: CreateUserInput!) {
-    createUser(data: $data) {
-      id
-    }
-  }
-`
-
-const createUserVariables = {
-  email: 'zalari@fozorat.bd',
-  name: 'Gabriel Figueroa',
-  password: '2exyrQcg',
-  username: 'QGULNpCoQD'
-}
-
+import { Server } from 'node:http'
+import { createApolloServer } from '../../../server'
+import { ApolloClient, createApolloClient } from '../../../tests/graphql/client'
+import { createUserVariables } from '../../../tests/graphql/data'
+import { createUserQuery } from '../../../tests/graphql/queries'
+import { UserCreated } from '../../../tests/graphql/types'
 
 describe('[e2e] Create User', () => {
-  let testServer: ApolloServer
+  let testServer: Server
+  let client: ApolloClient<unknown>
+  
   beforeAll(async () => {
-    testServer = await Server.createServer()
+    const {server, url}= await createApolloServer()
+    const apolloClient = createApolloClient(url)
+    testServer = server
+    client = apolloClient
   })
 
   afterAll(() => {
-    testServer.stop()
+    testServer.close()
   })
   
   it('should be able to create a new user', async () => {
-    
-
-    const result = await testServer.executeOperation({
-      query: createUserQuery,
-      variables: createUserVariables
+    const response = await client.mutate<UserCreated>({
+      mutation: createUserQuery,
+      variables: {data: createUserVariables}
     })
 
-    console.log(result.data)
 
-    expect(result.errors).toBeUndefined();
+    expect(response.errors).toBeUndefined()
+    expect(response.data?.createUser.id).toBeDefined()
+
   })
 })

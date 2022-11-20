@@ -1,4 +1,19 @@
 
+const swcConfig = {
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": true,
+   
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
+  },
+ 
+}
 
 export default {
   clearMocks: true,
@@ -7,24 +22,7 @@ export default {
   coverageProvider: "v8",
   testTimeout: 30000,
   transform: {
-    "^.+\\.(t|j)sx?$": ["@swc/jest", {
-      "jsc": {
-        "parser": {
-          "syntax": "typescript",
-          "tsx": false,
-          "decorators": true
-        },
-        "transform": {
-          "legacyDecorator": true,
-          "decoratorMetadata": true
-        },
-        "target": "es2020"
-      },
-      "module": {
-        "type": "commonjs",
-        "noInterop": true
-      }
-    }],
+    "^.+\\.(t|j)sx?$": ["@swc/jest", swcConfig],
   },
   
 };
