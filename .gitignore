@@ -1,5 +1,8 @@
+# Folders
 node_modules
-# Keep environment variables out of version control
-.env
 coverage
 dist
+
+# Files
+.env
+.env.testing
