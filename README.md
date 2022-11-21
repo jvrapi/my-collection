@@ -17,9 +17,9 @@ O *my collection* é uma aplicação desenvolvida com o objetivo de estudar nova
 - [Prisma](https://www.prisma.io/)
 - [Typedi](https://github.com/typestack/typedi)
 - [Json Web Token](https://github.com/auth0/node-jsonwebtoken)
-- [UUID](https://github.com/uuidjs/uuid)
+- [Scryfall SDK](https://github.com/ChiriVulpes/scryfall-sdk)
 - [Jest](https://jestjs.io/pt-BR/)
-
+- [Chai](https://github.com/chaijs/chai) + [Chai HTTP](https://github.com/chaijs/chai-http)
 
 ## :information_source: Como usar
 No projeto, foi utilizado o [Docker](https://www.docker.com/) junto com o [Compose](https://docs.docker.com/compose/). 
