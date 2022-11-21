@@ -3,6 +3,7 @@ import { BcryptPasswordProvider } from "../../../../providers/password/bcrypt-pa
 import { PasswordProvider } from "../../../../providers/password/password-provider"
 import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider"
 import { GenerateToken, TokenProvider } from "../../../../providers/token/token-provider"
+import { userData } from "../../../../tests/mocks/user"
 import { InMemoryUsersRepository } from "../../../users/repositories/in-memory-users-repository"
 import { CreateUser, UserCreated, UsersRepository } from "../../../users/repositories/users-repository"
 import { AuthenticateUserUseCase } from "./authenticate-user-use-case"
@@ -29,24 +30,18 @@ describe('[unit] Authenticate user', () => {
   })
 
   it('should be able to authenticate a user', async () => {
-    const user = {
-      name: 'Warren Newman',
-      email: 'efle@ujpa.fr',
-      username: 'qdRSJkNoJT',
-      password: 'Qf41PhTg2v'
-    }
-
-    const passwordHashed = await passwordProvider.hashPassword(user.password)
+   
+    const passwordHashed = await passwordProvider.hashPassword(userData.password)
     
     
     await usersRepository.create({
-      ...user,
+      ...userData,
       password: passwordHashed
     })
 
     const token = await authenticateUserUseCase.execute({
-      username: user.email,
-      password: user.password
+      username: userData.email,
+      password: userData.password
     })
 
     expect(token).toBeDefined()
@@ -81,25 +76,20 @@ describe('[unit] Authenticate user', () => {
   })
 
   it('should not be able to authenticate user with wrong password', async () => {
-    const user = {
-      name: 'Warren Newman',
-      email: 'efle@ujpa.fr',
-      username: 'qdRSJkNoJT',
-      password: 'Qf41PhTg2v'
-    }
+   
 
-    const passwordHashed = await passwordProvider.hashPassword(user.password)
+    const passwordHashed = await passwordProvider.hashPassword(userData.password)
     
     const validatePasswordSpy = jest.spyOn(passwordProvider, 'compare')
     
     await usersRepository.create({
-      ...user,
+      ...userData,
       password: passwordHashed
     })
 
 
     await expect(authenticateUserUseCase.execute({
-      username: user.email,
+      username: userData.email,
       password: 'TcGAIRE2sQ'
     })).rejects.toThrow()
 

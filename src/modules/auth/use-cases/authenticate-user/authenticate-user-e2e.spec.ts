@@ -2,8 +2,8 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { Server } from 'http'
 import { createApolloServer } from '../../../../server'
-import { createUserVariables } from '../../../../tests/graphql/data'
 import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/queries'
+import { userData } from '../../../../tests/mocks/user'
 
 chai.use(chaiHttp)
 
@@ -17,7 +17,7 @@ describe('[e2e] Authenticate user', () => {
     serverUrl = url
     await chai.request(serverUrl).post('').send({
       query: createUserQuery,
-      variables: {data: createUserVariables}
+      variables: {data: userData}
     })
     
   })
@@ -29,8 +29,8 @@ describe('[e2e] Authenticate user', () => {
 
   it('should be able to authenticate a user', async () => {
     const authenticateData = {
-      username: createUserVariables.email,
-      password: createUserVariables.password
+      username: userData.email,
+      password: userData.password
     }
     const response = await chai.request(serverUrl).post('').send({
       query: authenticateUserQuery,
@@ -59,7 +59,7 @@ describe('[e2e] Authenticate user', () => {
   })
   it('should not be able to authenticate user with wrong password', async () => {
     const authenticateData = {
-      username: createUserVariables.email,
+      username: userData.email,
       password: 'wrong-password',
     }
 
@@ -76,7 +76,7 @@ describe('[e2e] Authenticate user', () => {
   it('should not be able to authenticate user with invalid email', async () => {
     const authenticateData = {
       username: 'ero@aniihpo.uk',
-      password: createUserVariables.password,
+      password: userData.password,
     }
 
     const response = await chai.request(serverUrl).post('').send({
@@ -92,7 +92,7 @@ describe('[e2e] Authenticate user', () => {
   it('should not be able to authenticate user with invalid username', async () => {
     const authenticateData = {
       username: 'kUpcDTRdBE',
-      password: createUserVariables.password,
+      password: userData.password,
     }
 
     const response = await chai.request(serverUrl).post('').send({

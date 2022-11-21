@@ -2,9 +2,10 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Server } from 'node:http';
 import { createApolloServer } from '../../../../server';
-import { createUserVariables } from '../../../../tests/graphql/data';
 import { createUserQuery } from '../../../../tests/graphql/queries';
+import { userData } from '../../../../tests/mocks/user';
 chai.use(chaiHttp)
+
 
 
 describe('[e2e] Create User', () => {
@@ -26,7 +27,7 @@ describe('[e2e] Create User', () => {
 
     const response =  await chai.request(serverUrl).post('').send({
       query: createUserQuery,
-      variables: {data: createUserVariables}
+      variables: {data: userData}
     })
 
 
@@ -39,14 +40,14 @@ describe('[e2e] Create User', () => {
   it('should not be able to create a new user with same email', async () => {
     await chai.request(serverUrl).post('').send({
       query: createUserQuery,
-      variables: {data: createUserVariables}
+      variables: {data: userData}
     })
 
 
     const response = await chai.request(serverUrl).post('').send({
       query: createUserQuery,
       variables: {data: {
-        ...createUserVariables,
+        ...userData,
         username: 'fGsRjHXoRq'
       }}
     })
@@ -62,20 +63,19 @@ describe('[e2e] Create User', () => {
   it('should not be able to create a new user with same username', async () => {
     await chai.request(serverUrl).post('').send({
       query: createUserQuery,
-      variables: {data: createUserVariables}
+      variables: {data: userData}
     })
 
 
     const response = await chai.request(serverUrl).post('').send({
       query: createUserQuery,
       variables: {data: {
-        ...createUserVariables,
+        ...userData,
         email: 'noteju@kosufawav.pe'
       }}
     })
 
     expect(response.status).toBe(200)
-    
     expect(response.body.errors).toBeDefined()
     expect(response.body.data?.createUser.id).toBeUndefined()
 

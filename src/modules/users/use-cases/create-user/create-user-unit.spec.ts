@@ -1,5 +1,6 @@
 import { BcryptPasswordProvider } from "../../../../providers/password/bcrypt-password-provider"
 import { PasswordProvider } from "../../../../providers/password/password-provider"
+import { userData } from "../../../../tests/mocks/user"
 import { InMemoryUsersRepository } from "../../repositories/in-memory-users-repository"
 import { UsersRepository } from "../../repositories/users-repository"
 import { CreateUserUseCase } from "./create-user-use-case"
@@ -19,53 +20,24 @@ describe('[unit] Create user', () => {
   })
   
   it('should be able to create a new user', async () => {
-    const user = await createUserUseCase.execute({
-      email: 'zalari@fozorat.bd',
-      name: 'Gabriel Figueroa',
-      password: '2exyrQcg',
-      username: 'QGULNpCoQD'
-    })
+    const user = await createUserUseCase.execute(userData)
 
     expect(user).toHaveProperty('id')
   })
 
   it('should not be able to create a user with same email', async () => {
-    const sameEmail = 'zalari@fozorat.bd' 
     
-    
-    await createUserUseCase.execute({
-      email: sameEmail,
-      name: 'Peter Tate',
-      password: '2exyrQcg',
-      username: 'dudvxVzgJB'
-    })
+    await createUserUseCase.execute(userData)
 
-    await expect(createUserUseCase.execute({
-      email: sameEmail,
-      name: 'Catherine Patterson',
-      password: '2exyrQcg',
-      username: 'SHqdqjGAOb'
-    })).rejects.toThrowError()
+    await expect(createUserUseCase.execute(userData)).rejects.toThrowError()
 
   })
 
   it('should not be able to create a user with same username', async () => {
-    const sameUsername = 'pNoHfGjvJP' 
     
-    
-    await createUserUseCase.execute({
-      email: 'opaug@inhug.bi',
-      name: 'Carolyn Watson',
-      password: '2exyrQcg',
-      username: sameUsername
-    })
+    await createUserUseCase.execute(userData)
 
-    await expect(createUserUseCase.execute({
-      email: 'garweja@fazbil.vi',
-      name: 'Etta Smith',
-      password: '2exyrQcg',
-      username: sameUsername
-    })).rejects.toThrowError()
+    await expect(createUserUseCase.execute(userData)).rejects.toThrowError()
 
   })
  })
