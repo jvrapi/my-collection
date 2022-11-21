@@ -6,6 +6,7 @@ import { buildSchema } from 'type-graphql';
 import { Container } from 'typedi';
 import { registerContainers } from './container';
 import { ErrorInterceptor as formatError } from './middlewares/ErrorInterceptor';
+import { AuthResolver } from './resolvers/auth-resolver';
 import { UserResolver } from './resolvers/user-resolver';
 
 
@@ -14,7 +15,7 @@ export const createApolloServer = async () => {
   registerContainers()
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, AuthResolver],
     emitSchemaFile: resolve(__dirname, './schema.gql'),
     container: Container
   })

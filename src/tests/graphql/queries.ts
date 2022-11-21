@@ -5,3 +5,11 @@ export const createUserQuery = `
     }
   }
 ` 
+
+export const authenticateUserQuery = `
+  mutation AuthenticateUser($data: AuthenticateUserInput!) {
+    authenticateUser(data: $data){
+      token
+    }
+  }
+`

@@ -1,11 +1,11 @@
 import { User } from "@prisma/client";
 import { prisma } from "../../../database/prisma";
-import { CreateUser,  UsersRepository } from "./users-repository";
+import { CreateUser, UsersRepository } from "./users-repository";
 
 export class PrismaUsersRepository implements UsersRepository {
    
   
-  findByEmailOrUsername(email: string, username: string): Promise<User | null> {
+  findByEmailOrUsername(email?: string, username?: string): Promise<User | null> {
     return  prisma.user.findFirst({
     where: {
       OR: [
@@ -16,7 +16,7 @@ export class PrismaUsersRepository implements UsersRepository {
         },
         {
           username: {
-            contains: username.toLowerCase()
+            contains: username?.toLowerCase()
           }
         }
       ]

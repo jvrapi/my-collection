@@ -18,7 +18,6 @@ const swcConfig = {
 export default {
   clearMocks: true,
   collectCoverage: true,
-  coverageDirectory: "coverage",
   coverageProvider: "v8",
   testTimeout: 30000,
   transform: {
