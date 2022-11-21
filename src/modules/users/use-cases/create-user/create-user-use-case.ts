@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { CreateUserInput } from '../../../../dtos/inputs/create-user-input';
 import { ApiError } from '../../../../errors/Error';
-import { PasswordProvider } from '../../../../providers/password-provider/password-provider';
+import { PasswordProvider } from '../../../../providers/password/password-provider';
 import { UsersRepository } from '../../repositories/users-repository';
 
 

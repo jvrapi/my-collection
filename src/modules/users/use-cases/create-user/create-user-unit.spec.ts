@@ -1,5 +1,5 @@
-import { BcryptPasswordProvider } from "../../../../providers/password-provider/bcrypt-password-provider"
-import { PasswordProvider } from "../../../../providers/password-provider/password-provider"
+import { BcryptPasswordProvider } from "../../../../providers/password/bcrypt-password-provider"
+import { PasswordProvider } from "../../../../providers/password/password-provider"
 import { InMemoryUsersRepository } from "../../repositories/in-memory-users-repository"
 import { UsersRepository } from "../../repositories/users-repository"
 import { CreateUserUseCase } from "./create-user-use-case"
