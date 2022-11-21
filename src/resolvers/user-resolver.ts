@@ -2,7 +2,7 @@ import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Inject, Service } from 'typedi';
 import { CreateUserInput } from "../dtos/inputs/create-user-input";
 import { User } from "../dtos/models/users-model";
-import { CreateUserUseCase } from "../modules/users/use-cases/create-user-use-case";
+import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
 @Service()
 @Resolver()
 export class UserResolver {

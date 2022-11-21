@@ -1,9 +1,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Server } from 'node:http';
-import { createApolloServer } from '../../../server';
-import { createUserVariables } from '../../../tests/graphql/data';
-import { createUserQuery } from '../../../tests/graphql/queries';
+import { createApolloServer } from '../../../../server';
+import { createUserVariables } from '../../../../tests/graphql/data';
+import { createUserQuery } from '../../../../tests/graphql/queries';
 chai.use(chaiHttp)
 
 

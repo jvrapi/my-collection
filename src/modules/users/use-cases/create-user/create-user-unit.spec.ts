@@ -1,7 +1,7 @@
-import { BcryptPasswordProvider } from "../../../providers/password-provider/bcrypt-password-provider"
-import { PasswordProvider } from "../../../providers/password-provider/password-provider"
-import { InMemoryUsersRepository } from "../repositories/in-memory-users-repositoryrepository"
-import { UsersRepository } from "../repositories/users-repository"
+import { BcryptPasswordProvider } from "../../../../providers/password-provider/bcrypt-password-provider"
+import { PasswordProvider } from "../../../../providers/password-provider/password-provider"
+import { InMemoryUsersRepository } from "../../repositories/in-memory-users-repository"
+import { UsersRepository } from "../../repositories/users-repository"
 import { CreateUserUseCase } from "./create-user-use-case"
 
 jest.useFakeTimers()
