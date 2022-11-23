@@ -27,10 +27,17 @@ scalar DateTime
 type Mutation {
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
   createUser(data: CreateUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
   users: String!
+}
+
+input UpdateUserInput {
+  email: String!
+  name: String!
+  username: String!
 }
 
 type User {

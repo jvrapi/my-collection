@@ -1,15 +1,22 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { Inject, Service } from 'typedi';
 import { CreateUserInput } from "../dtos/inputs/create-user-input";
+import { UpdateUserInput } from "../dtos/inputs/update-user-input";
 import { User } from "../dtos/models/users-model";
+import { EnsureAuthenticated } from "../middlewares/EnsureAuthenticated";
 import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
+import { UpdateUserUseCase } from "../modules/users/use-cases/update-user/update-user-use-case";
+import { Context } from "../types/context";
 @Service()
 @Resolver()
 export class UserResolver {
 
   constructor(
     @Inject()
-    private createUserUseCase: CreateUserUseCase
+    private createUserUseCase: CreateUserUseCase,
+    
+    @Inject()
+    private updateUserUseCase: UpdateUserUseCase
   ){}
 
 
@@ -21,6 +28,19 @@ export class UserResolver {
   @Mutation(()=> User)
   async createUser(@Arg('data') data: CreateUserInput) {
     return await this.createUserUseCase.execute(data)
+  }
+
+  @Mutation(() => User)
+  @UseMiddleware(EnsureAuthenticated)
+  async updateUser(
+      @Arg('data') data: UpdateUserInput,
+      @Ctx() ctx: Context
+    
+    ){
+    return this.updateUserUseCase.execute({
+      ...data,
+      id: ctx.user.id
+    })
   }
 
 }

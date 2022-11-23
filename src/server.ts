@@ -24,7 +24,7 @@ export const createApolloServer = async () => {
 
   const server = new ApolloServer({
     schema,
-    context: async ({req}) => ({token: req.headers.authorization}),
+    context: async ({req}) => ({token: req.headers.authorization, user: {id: null}}),
     formatError,
   })
 

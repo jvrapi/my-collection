@@ -8,10 +8,19 @@ export interface CreateUser{
   password: string
 }
 
+export interface UpdateUser {
+  id: string
+  name: string
+  email: string
+  username: string
+}
+
 export type UserCreated = Optional<User, 'password'> 
 
 
 export interface UsersRepository {
-  findByEmailOrUsername(email?: string, username?: string): Promise<User | null>
+  findByEmailOrUsername(email?: string, username?: string, id?: string): Promise<User | null>
+  findById(id: string): Promise<User | null>
   create(user: CreateUser): Promise<UserCreated>
+  save(user: UpdateUser): Promise<User>
 }
