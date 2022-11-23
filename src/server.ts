@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from '@apollo/server';
 import 'dotenv/config';
 import { resolve } from 'node:path';
 import 'reflect-metadata';
@@ -8,6 +8,8 @@ import { registerContainers } from './container';
 import { ErrorInterceptor as formatError } from './middlewares/ErrorInterceptor';
 import { AuthResolver } from './resolvers/auth-resolver';
 import { UserResolver } from './resolvers/user-resolver';
+import { Context } from './types/context';
+import { startStandaloneServer } from '@apollo/server/standalone';
 
 
 
@@ -20,22 +22,23 @@ export const createApolloServer = async () => {
     container: Container
   })
 
+
   
 
-  const server = new ApolloServer({
+  const server = new ApolloServer<Context>({
     schema,
-    context: async ({req}) => ({token: req.headers.authorization, user: {id: null}}),
-    formatError,
+    formatError
   })
 
-  const serverInfo = await server.listen()
+  const {url} = await startStandaloneServer(server, {
+    context: async ({req}) => ({token: req.headers.authorization, user: {id: ''}}),
+    
+  })
+
+  console.log(`🚀 Server ready on ${url} 🚀`)
 
   
-
-  console.log(`🚀 Server ready on ${serverInfo.url} 🚀`)
-
-  
-  return serverInfo
+  return {server, url}
 }
 
 

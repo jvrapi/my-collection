@@ -1,14 +1,15 @@
+import { ApolloServer } from '@apollo/server'
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import { Server } from 'http'
 import { createApolloServer } from '../../../../server'
 import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/queries'
 import { userData } from '../../../../tests/mocks/user'
+import { Context } from '../../../../types/context'
 
 chai.use(chaiHttp)
 
 describe('[e2e] Authenticate user', () => {
-  let testServer: Server
+  let testServer: ApolloServer<Context>
   let serverUrl: string
   
   beforeAll(async () => {
@@ -23,7 +24,7 @@ describe('[e2e] Authenticate user', () => {
   })
 
   afterAll(() => {
-    testServer.close()
+    testServer.stop()
   })
   
 

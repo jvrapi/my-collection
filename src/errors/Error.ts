@@ -1,10 +1,12 @@
-import { ApolloError } from 'apollo-server-errors';
+import { GraphQLError } from 'graphql';
 
-export class ApiError extends ApolloError {
+export class ApiError {
   constructor(message: string, statusCode = 400) {
 
-    super(message, `${statusCode}`);
-
-    Object.defineProperty(this, 'name', { value: 'ApiError' });
+    throw new GraphQLError(message, {
+      extensions: {
+        code: statusCode.toString()
+      }
+    })
   }
 }

@@ -1,11 +1,15 @@
-import { GraphQLError, GraphQLFormattedError } from "graphql";
+import { GraphQLFormattedError } from "graphql";
 
 
-export const ErrorInterceptor = (error: GraphQLError): GraphQLFormattedError => {
+export const ErrorInterceptor = (formattedError: GraphQLFormattedError): GraphQLFormattedError => {
   return {
-    message: error.message,
+    message: formattedError.message,
     extensions: {
-      status: error.extensions.code,
+      status: formattedError?.extensions?.code,
     }
   }
+
+
+
+  
 }

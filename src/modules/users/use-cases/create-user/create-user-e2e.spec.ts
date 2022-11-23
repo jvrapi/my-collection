@@ -1,15 +1,16 @@
+import { ApolloServer } from '@apollo/server';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { Server } from 'node:http';
 import { createApolloServer } from '../../../../server';
 import { createUserQuery } from '../../../../tests/graphql/queries';
 import { userData } from '../../../../tests/mocks/user';
+import { Context } from '../../../../types/context';
 chai.use(chaiHttp)
 
 
 
 describe('[e2e] Create User', () => {
-  let testServer: Server
+  let testServer: ApolloServer<Context>
   let serverUrl: string
   
   beforeAll(async () => {
@@ -19,7 +20,7 @@ describe('[e2e] Create User', () => {
   })
 
   afterAll(() => {
-    testServer.close()
+    testServer.stop()
   })
   
   it('should be able to create a new user', async () => {
