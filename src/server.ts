@@ -19,7 +19,7 @@ export const createApolloServer = async () => {
   const schema = await buildSchema({
     resolvers: [UserResolver, AuthResolver],
     emitSchemaFile: resolve(__dirname, './schema.gql'),
-    container: Container
+    container: Container,
   })
 
 

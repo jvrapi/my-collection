@@ -30,7 +30,7 @@ export class UpdateUserUseCase{
     }
 
     if(username !== user.username){
-      const newUsernameAlreadyInUse = await this.usersRepository.findByEmailOrUsername('', email, id)
+      const newUsernameAlreadyInUse = await this.usersRepository.findByEmailOrUsername('', username, id)
       if(newUsernameAlreadyInUse){
         throw new ApiError('New username already in use')
       }
