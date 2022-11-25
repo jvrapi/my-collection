@@ -1,3 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
+const log = process.env.LOG_NIVEL as 'info' | 'query' | 'warn' | 'error'
+
+
+export const prisma = new PrismaClient({
+  log: [log]
+});
