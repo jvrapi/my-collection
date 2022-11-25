@@ -42,7 +42,7 @@ describe('[e2e] Authenticate user', () => {
     expect(response.body.errors).toBeUndefined()
     expect(response.body.data?.authenticateUser?.token).toBeDefined()
   })
-
+  
   it('should not be able to authenticate user without username or password', async () => {
      const authenticateData = {
       username: '',
@@ -58,6 +58,7 @@ describe('[e2e] Authenticate user', () => {
     expect(response.body.errors).toBeDefined()
     expect(response.body.data).toBeNull()
   })
+  
   it('should not be able to authenticate user with wrong password', async () => {
     const authenticateData = {
       username: userData.email,
@@ -74,6 +75,7 @@ describe('[e2e] Authenticate user', () => {
     expect(response.body.errors).toBeDefined()
     expect(response.body.data).toBeNull()
   })
+  
   it('should not be able to authenticate user with invalid email', async () => {
     const authenticateData = {
       username: 'ero@aniihpo.uk',
@@ -90,6 +92,7 @@ describe('[e2e] Authenticate user', () => {
     expect(response.body.errors).toBeDefined()
     expect(response.body.data).toBeNull()
   })
+  
   it('should not be able to authenticate user with invalid username', async () => {
     const authenticateData = {
       username: 'kUpcDTRdBE',
@@ -106,4 +109,5 @@ describe('[e2e] Authenticate user', () => {
     expect(response.body.errors).toBeDefined()
     expect(response.body.data).toBeNull()
   })
+  
 })
