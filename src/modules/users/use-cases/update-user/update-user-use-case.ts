@@ -1,7 +1,7 @@
 import { Inject, Service } from "typedi";
 import { UpdateUserInput } from "../../../../dtos/inputs/update-user-input";
 import { ApiError } from "../../../../errors/Error";
-import {UsersRepository} from '../../repositories/users-repository'
+import { UsersRepository } from '../../repositories/users-repository';
 
 interface UpdateUserUseCaseRequest extends UpdateUserInput{
   id: string
@@ -17,6 +17,7 @@ export class UpdateUserUseCase{
 
   async execute({id,email,name,username}: UpdateUserUseCaseRequest){ 
     const user = await this.usersRepository.findById(id)
+
 
     if(!user){
       throw new ApiError('Invalid user')

@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
+import { randomUUID } from 'node:crypto';
 import { CreateUser, UpdateUser, UsersRepository } from "./users-repository";
-import {randomUUID} from 'node:crypto'
 
 export class InMemoryUsersRepository implements UsersRepository{
   
@@ -55,6 +55,7 @@ export class InMemoryUsersRepository implements UsersRepository{
     this.users[userIndex].name = name
     this.users[userIndex].username = username
     this.users[userIndex].email = email
+    this.users[userIndex].updatedAt = new Date()
 
     return this.users[userIndex]
   }

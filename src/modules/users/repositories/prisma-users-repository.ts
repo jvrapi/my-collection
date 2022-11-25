@@ -61,7 +61,8 @@ export class PrismaUsersRepository implements UsersRepository {
       data: {
         email,
         name,
-        username
+        username,
+        updatedAt: new Date()
       }
     })
   }
