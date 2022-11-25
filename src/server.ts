@@ -1,15 +1,15 @@
 import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
 import 'dotenv/config';
 import { resolve } from 'node:path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { Container } from 'typedi';
 import { registerContainers } from './container';
-import { ErrorInterceptor as formatError } from './middlewares/ErrorInterceptor';
+import { ErrorInterceptor as formatError } from './middlewares/error-interceptor';
 import { AuthResolver } from './resolvers/auth-resolver';
 import { UserResolver } from './resolvers/user-resolver';
 import { Context } from './types/context';
-import { startStandaloneServer } from '@apollo/server/standalone';
 
 
 

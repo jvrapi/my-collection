@@ -3,7 +3,7 @@ import { Inject, Service } from 'typedi';
 import { CreateUserInput } from "../dtos/inputs/create-user-input";
 import { UpdateUserInput } from "../dtos/inputs/update-user-input";
 import { User } from "../dtos/models/users-model";
-import { EnsureAuthenticated } from "../middlewares/EnsureAuthenticated";
+import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
 import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
 import { UpdateUserUseCase } from "../modules/users/use-cases/update-user/update-user-use-case";
 import { Context } from "../types/context";
