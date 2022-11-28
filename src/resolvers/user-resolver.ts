@@ -5,6 +5,7 @@ import { UpdateUserInput } from "../dtos/inputs/update-user-input";
 import { User } from "../dtos/models/users-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
 import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
+import { GetUserUseCase } from "../modules/users/use-cases/get-user/get-user-use-case";
 import { UpdateUserUseCase } from "../modules/users/use-cases/update-user/update-user-use-case";
 import { Context } from "../types/context";
 @Service()
@@ -16,13 +17,16 @@ export class UserResolver {
     private createUserUseCase: CreateUserUseCase,
     
     @Inject()
-    private updateUserUseCase: UpdateUserUseCase
+    private updateUserUseCase: UpdateUserUseCase,
+
+    @Inject()
+    private getUserUseCase: GetUserUseCase
   ){}
 
-
-  @Query(()=> String)
-  async users(){
-    return 'Hello world'
+  @Query(() => User)
+  @UseMiddleware(EnsureAuthenticated)
+  async getUsers(@Ctx() ctx: Context){
+    return await this.getUserUseCase.execute(ctx.user.id)
   }
 
   @Mutation(()=> User)
