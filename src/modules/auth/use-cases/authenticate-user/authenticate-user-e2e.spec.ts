@@ -1,13 +1,10 @@
 import { ApolloServer } from '@apollo/server'
-import chai from 'chai'
-import chaiHttp from 'chai-http'
 import request from 'supertest'
 import { createApolloServer } from '../../../../server'
 import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/mutations'
 import { userData } from '../../../../tests/mocks/user'
 import { Context } from '../../../../types/context'
 
-chai.use(chaiHttp)
 
 describe('[e2e] Authenticate user', () => {
   let testServer: ApolloServer<Context>
