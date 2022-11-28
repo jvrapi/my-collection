@@ -17,8 +17,8 @@ describe('[e2e] Create User', () => {
     serverUrl = url
   })
 
-  afterAll(() => {
-    testServer.stop()
+  afterAll(async () => {
+    await testServer.stop()
   })
   
   it('should be able to create a new user', async () => {

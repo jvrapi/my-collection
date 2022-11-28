@@ -1,14 +1,12 @@
 import { ApolloServer } from "@apollo/server";
-import { randomUUID } from "node:crypto";
+import FakeTimers from "@sinonjs/fake-timers";
+import { randomUUID } from "crypto";
 import request from 'supertest';
-import { prisma } from "../../../../database/prisma";
 import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider";
 import { createApolloServer } from "../../../../server";
 import { authenticateUserQuery, createUserQuery, updateUserQuery } from "../../../../tests/graphql/mutations";
 import { userData } from "../../../../tests/mocks/user";
 import { Context } from "../../../../types/context";
-
-
 
 describe('[e2e] Update user', () => {
   let testServer: ApolloServer<Context>
@@ -20,12 +18,8 @@ describe('[e2e] Update user', () => {
     serverUrl = url
   })
   
-  afterEach(async () => {
-    await prisma.user.deleteMany()
-  })
-
-  afterAll(() => {
-    testServer.stop()
+  afterAll(async () => {
+    await testServer.stop()
   })
 
   it('should not be able to update a user without an token', async () => {
@@ -54,6 +48,8 @@ describe('[e2e] Update user', () => {
   })
 
   it('should not be able to update a user with expired token', async () => {
+    const clock = FakeTimers.install();
+
     const createUserData = {
       email: 'ipi@jijacbij.la',
       name: 'Luke Higgins',
@@ -75,6 +71,7 @@ describe('[e2e] Update user', () => {
     }
 
 
+
     await request(serverUrl)
     .post('')
     .send({
@@ -91,9 +88,9 @@ describe('[e2e] Update user', () => {
 
     const token = authenticateUserResponse.body.data?.authenticateUser?.token
 
-  
-    await new Promise((r) => setTimeout(r, 16000))
-    
+
+    await clock.tickAsync(16000);
+
     const updateUserResponse = await request(serverUrl)
       .post('')
       .send({
@@ -105,14 +102,13 @@ describe('[e2e] Update user', () => {
 
     expect(updateUserResponse.status).toBe(200)
 
-
     expect(updateUserResponse.body.errors[0].extensions.status).toBe('401')
-      
+        
     expect(updateUserResponse.body.errors).toBeDefined()
-      
+        
     expect(updateUserResponse.body.data).toBeNull()
-  
-   
+    
+    clock.uninstall();
     
   })
   

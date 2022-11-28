@@ -21,8 +21,8 @@ describe('[e2e] Authenticate user', () => {
     
   })
 
-  afterAll(() => {
-    testServer.stop()
+  afterAll(async () => {
+    await testServer.stop()
   })
   
 
