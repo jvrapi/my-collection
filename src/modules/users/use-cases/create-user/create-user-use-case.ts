@@ -15,9 +15,10 @@ export class CreateUserUseCase{
     ){}
   async execute({name,email,password,username}: CreateUserInput){
 
-    const userAlreadyExists = await this.usersRepository.findByEmailOrUsername(email, username)
+    const emailAlreadyInUse = await this.usersRepository.findByEmail(email)
+    const usernameAlreadyInUse = await this.usersRepository.findByUsername(username)
 
-    if(userAlreadyExists){
+    if(emailAlreadyInUse || usernameAlreadyInUse){
       throw new ApiError('Users already exists!')
     }
 

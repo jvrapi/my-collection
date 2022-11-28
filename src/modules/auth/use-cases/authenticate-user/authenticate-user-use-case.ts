@@ -2,6 +2,7 @@ import { Inject, Service } from "typedi";
 import { ApiError } from "../../../../errors/Error";
 import { PasswordProvider } from "../../../../providers/password/password-provider";
 import { TokenProvider } from "../../../../providers/token/token-provider";
+import { isEmail } from "../../../../utils/is-email";
 import { UsersRepository } from "../../../users/repositories/users-repository";
 
 interface AuthenticateUserUseCaseRequest {
@@ -27,20 +28,23 @@ export class AuthenticateUserUseCase{
       throw new ApiError('Missing some information')
     }
 
-    const userExists = await this.usersRepository.findByEmailOrUsername(username, username)
+    let user = await this.usersRepository.findByUsername(username)
 
+    if(isEmail(username)){
+      user = await this.usersRepository.findByEmail(username)
+    }
 
-    if(!userExists){
+    if(!user){
       throw new Error('E-mail or password incorrect')
     }
 
-    const passwordIsCorrect = await this.passwordProvider.compare(password, userExists.password)
+    const passwordIsCorrect = await this.passwordProvider.compare(password, user.password)
 
     if(!passwordIsCorrect){
       throw new Error('E-mail or password incorrect')
     }
 
-    const token = this.tokenProvider.generateToken({userId: userExists.id})
+    const token = this.tokenProvider.generateToken({userId: user.id})
 
     return token
 

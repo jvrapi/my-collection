@@ -15,7 +15,8 @@ describe('[unit] Update user', () => {
 
   it('should be able to update a user', async () => {
     const findByIdSpy = jest.spyOn(usersRepository,'findById')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository,'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository,'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository,'findByUsername')
     const saveSpy = jest.spyOn(usersRepository,'save')
     
     const user = await usersRepository.create(userData)
@@ -28,14 +29,16 @@ describe('[unit] Update user', () => {
     })
 
     expect(findByIdSpy).toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalledTimes(2)
+    expect(findByEmailSpy).toHaveBeenCalled()
+    expect(findByUsernameSpy).toHaveBeenCalled()
     expect(saveSpy).toHaveBeenCalled()
     
   })
 
   it('should not be able to update a non existing user', async () => {
     const findByIdSpy = jest.spyOn(usersRepository,'findById')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository,'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository,'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository,'findByUsername')
     const saveSpy = jest.spyOn(usersRepository,'save')
     
     await expect (updateUserUseCase.execute({
@@ -46,13 +49,15 @@ describe('[unit] Update user', () => {
     })).rejects.toThrow('Invalid user')
 
     expect(findByIdSpy).toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).not.toHaveBeenCalled()
+    expect(findByEmailSpy).not.toHaveBeenCalled()
+    expect(findByUsernameSpy).not.toHaveBeenCalled()
     expect(saveSpy).not.toHaveBeenCalled()
   })
 
   it('should not be able to update email if his already in use', async () => {
     const findByIdSpy = jest.spyOn(usersRepository,'findById')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository,'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository,'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository,'findByUsername')
     const saveSpy = jest.spyOn(usersRepository,'save')
 
     const user = await usersRepository.create(userData)
@@ -72,14 +77,16 @@ describe('[unit] Update user', () => {
     })).rejects.toThrow('New email already in use')
 
     expect(findByIdSpy).toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalled()
+    expect(findByUsernameSpy).not.toHaveBeenCalled()
+    expect(findByEmailSpy).toHaveBeenCalled()
     expect(saveSpy).not.toHaveBeenCalled()
   })
 
 
   it('should not be able to update username if his already in use', async () => {
     const findByIdSpy = jest.spyOn(usersRepository,'findById')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository,'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository,'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository,'findByUsername')
     const saveSpy = jest.spyOn(usersRepository,'save')
 
     const user = await usersRepository.create(userData)
@@ -99,7 +106,8 @@ describe('[unit] Update user', () => {
     })).rejects.toThrow('New username already in use')
 
     expect(findByIdSpy).toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalled()
+    expect(findByUsernameSpy).toHaveBeenCalled()
+    expect(findByEmailSpy).toHaveBeenCalled()
     expect(saveSpy).not.toHaveBeenCalled()
   })
 })

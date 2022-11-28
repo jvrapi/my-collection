@@ -21,10 +21,11 @@ describe('[unit] Authenticate user', () => {
    
   })
 
-  it('should be able to authenticate a user', async () => {
+  it('should be able to authenticate a user with email', async () => {
 
     const createUserSpy = jest.spyOn(usersRepository, 'create')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository, 'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository, 'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository, 'findByUsername')
     const generateTokenSpy = jest.spyOn(tokenProvider, 'generateToken')
     const hashPasswordSpy = jest.spyOn(passwordProvider, 'hashPassword')
    
@@ -43,7 +44,36 @@ describe('[unit] Authenticate user', () => {
 
     expect(token).toBeDefined()
     expect(createUserSpy).toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalled()
+    expect(findByEmailSpy).toHaveBeenCalled()
+    expect(findByUsernameSpy).toHaveBeenCalled()
+    expect(generateTokenSpy).toHaveBeenCalled()
+    expect(hashPasswordSpy).toHaveBeenCalled()
+  })
+
+  it('should be able to authenticate a user with username', async () => {
+    const createUserSpy = jest.spyOn(usersRepository, 'create')
+    const findByEmailSpy = jest.spyOn(usersRepository, 'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository, 'findByUsername')
+    const generateTokenSpy = jest.spyOn(tokenProvider, 'generateToken')
+    const hashPasswordSpy = jest.spyOn(passwordProvider, 'hashPassword')
+   
+    const passwordHashed = await passwordProvider.hashPassword(userData.password)
+    
+    
+    await usersRepository.create({
+      ...userData,
+      password: passwordHashed
+    })
+
+    const token = await authenticateUserUseCase.execute({
+      username: userData.username,
+      password: userData.password
+    })
+
+    expect(token).toBeDefined()
+    expect(createUserSpy).toHaveBeenCalled()
+    expect(findByEmailSpy).not.toHaveBeenCalled()
+    expect(findByUsernameSpy).toHaveBeenCalled()
     expect(generateTokenSpy).toHaveBeenCalled()
     expect(hashPasswordSpy).toHaveBeenCalled()
   })
@@ -51,7 +81,8 @@ describe('[unit] Authenticate user', () => {
   it('should not be able to authenticate user with invalid email', async () => {
 
     const createUserSpy = jest.spyOn(usersRepository, 'create')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository, 'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository, 'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository, 'findByUsername')
     const generateTokenSpy = jest.spyOn(tokenProvider, 'generateToken')
     const hashPasswordSpy = jest.spyOn(passwordProvider, 'hashPassword')
 
@@ -61,7 +92,8 @@ describe('[unit] Authenticate user', () => {
     })).rejects.toThrow()
 
     expect(createUserSpy).not.toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalled()
+    expect(findByEmailSpy).toHaveBeenCalled()
+    expect(findByUsernameSpy).toHaveBeenCalled()
     expect(generateTokenSpy).not.toHaveBeenCalled()
     expect(hashPasswordSpy).not.toHaveBeenCalled()
   })
@@ -69,7 +101,8 @@ describe('[unit] Authenticate user', () => {
   it('should not be able to authenticate user with invalid username', async () => {
 
     const createUserSpy = jest.spyOn(usersRepository, 'create')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository, 'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository, 'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository, 'findByUsername')
     const generateTokenSpy = jest.spyOn(tokenProvider, 'generateToken')
     const hashPasswordSpy = jest.spyOn(passwordProvider, 'hashPassword')
     
@@ -78,8 +111,9 @@ describe('[unit] Authenticate user', () => {
       password: 'TcGAIRE2sQ'
     })).rejects.toThrow()
 
+    expect(findByUsernameSpy).toHaveBeenCalled()
+    expect(findByEmailSpy).not.toHaveBeenCalled()
     expect(createUserSpy).not.toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalled()
     expect(generateTokenSpy).not.toHaveBeenCalled()
     expect(hashPasswordSpy).not.toHaveBeenCalled()
   })
@@ -87,7 +121,8 @@ describe('[unit] Authenticate user', () => {
   it('should not be able to authenticate user with wrong password', async () => {
    
     const createUserSpy = jest.spyOn(usersRepository, 'create')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository, 'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository, 'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository, 'findByUsername')
     const generateTokenSpy = jest.spyOn(tokenProvider, 'generateToken')
     const hashPasswordSpy = jest.spyOn(passwordProvider, 'hashPassword')
 
@@ -108,7 +143,8 @@ describe('[unit] Authenticate user', () => {
 
 
     expect(createUserSpy).toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).toHaveBeenCalled()
+    expect(findByEmailSpy).toHaveBeenCalled()
+    expect(findByUsernameSpy).toHaveBeenCalled()
     expect(hashPasswordSpy).toHaveBeenCalled()
     expect(validatePasswordSpy).toHaveBeenCalled()
     expect(generateTokenSpy).not.toHaveBeenCalled()
@@ -117,7 +153,8 @@ describe('[unit] Authenticate user', () => {
   it('should not be able to authenticate user without username or password', async () => {
 
     const createUserSpy = jest.spyOn(usersRepository, 'create')
-    const findByEmailOrUsernameSpy = jest.spyOn(usersRepository, 'findByEmailOrUsername')
+    const findByEmailSpy = jest.spyOn(usersRepository, 'findByEmail')
+    const findByUsernameSpy = jest.spyOn(usersRepository, 'findByUsername')
     const generateTokenSpy = jest.spyOn(tokenProvider, 'generateToken')
     const hashPasswordSpy = jest.spyOn(passwordProvider, 'hashPassword')
 
@@ -133,7 +170,8 @@ describe('[unit] Authenticate user', () => {
     })).rejects.toThrow()
 
     expect(createUserSpy).not.toHaveBeenCalled()
-    expect(findByEmailOrUsernameSpy).not.toHaveBeenCalled()
+    expect(findByEmailSpy).not.toHaveBeenCalled()
+    expect(findByUsernameSpy).not.toHaveBeenCalled()
     expect(generateTokenSpy).not.toHaveBeenCalled()
     expect(hashPasswordSpy).not.toHaveBeenCalled()
   })
