@@ -1,8 +1,9 @@
 import { ApolloServer } from '@apollo/server'
 import chai from 'chai'
 import chaiHttp from 'chai-http'
+import request from 'supertest'
 import { createApolloServer } from '../../../../server'
-import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/queries'
+import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/mutations'
 import { userData } from '../../../../tests/mocks/user'
 import { Context } from '../../../../types/context'
 
@@ -16,7 +17,7 @@ describe('[e2e] Authenticate user', () => {
     const {server, url}= await createApolloServer()
     testServer = server
     serverUrl = url
-    await chai.request(serverUrl).post('').send({
+    await request(serverUrl).post('').send({
       query: createUserQuery,
       variables: {data: userData}
     })
@@ -33,7 +34,7 @@ describe('[e2e] Authenticate user', () => {
       username: userData.email,
       password: userData.password
     }
-    const response = await chai.request(serverUrl).post('').send({
+    const response = await request(serverUrl).post('').send({
       query: authenticateUserQuery,
       variables: {data: authenticateData}
     })
@@ -48,7 +49,7 @@ describe('[e2e] Authenticate user', () => {
       username: '',
       password: ''
     }
-    const response = await chai.request(serverUrl).post('').send({
+    const response = await request(serverUrl).post('').send({
       query: authenticateUserQuery,
       variables: {data: authenticateData}
     })
@@ -65,7 +66,7 @@ describe('[e2e] Authenticate user', () => {
       password: 'wrong-password',
     }
 
-    const response = await chai.request(serverUrl).post('').send({
+    const response = await request(serverUrl).post('').send({
       query: authenticateUserQuery,
       variables: {data: authenticateData}
     })
@@ -82,7 +83,7 @@ describe('[e2e] Authenticate user', () => {
       password: userData.password,
     }
 
-    const response = await chai.request(serverUrl).post('').send({
+    const response = await request(serverUrl).post('').send({
       query: authenticateUserQuery,
       variables: {data: authenticateData}
     })
@@ -99,7 +100,7 @@ describe('[e2e] Authenticate user', () => {
       password: userData.password,
     }
 
-    const response = await chai.request(serverUrl).post('').send({
+    const response = await request(serverUrl).post('').send({
       query: authenticateUserQuery,
       variables: {data: authenticateData}
     })

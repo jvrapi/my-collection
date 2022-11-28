@@ -1,15 +1,13 @@
 import { ApolloServer } from "@apollo/server";
-import chai from 'chai';
-import chaiHttp from 'chai-http';
 import { randomUUID } from "node:crypto";
+import request from 'supertest';
 import { prisma } from "../../../../database/prisma";
 import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider";
 import { createApolloServer } from "../../../../server";
-import { authenticateUserQuery, createUserQuery, updateUserQuery } from "../../../../tests/graphql/queries";
+import { authenticateUserQuery, createUserQuery, updateUserQuery } from "../../../../tests/graphql/mutations";
 import { userData } from "../../../../tests/mocks/user";
 import { Context } from "../../../../types/context";
 
-chai.use(chaiHttp)
 
 
 describe('[e2e] Update user', () => {
@@ -37,13 +35,14 @@ describe('[e2e] Update user', () => {
       username: 'uxfCtEeuyR'
     }
 
-    const updateUserResponse = await chai
-    .request(serverUrl)
+    const updateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: updateUserQuery,
       variables: {data}
     })
+
+
 
     expect(updateUserResponse.status).toBe(200)
 
@@ -76,16 +75,14 @@ describe('[e2e] Update user', () => {
     }
 
 
-    await chai
-    .request(serverUrl)
+    await request(serverUrl)
     .post('')
     .send({
       query: createUserQuery,
       variables: {data: createUserData, }
     })
 
-    const authenticateUserResponse = await chai
-    .request(serverUrl)
+    const authenticateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: authenticateUserQuery,
@@ -97,8 +94,7 @@ describe('[e2e] Update user', () => {
   
     await new Promise((r) => setTimeout(r, 16000))
     
-    const updateUserResponse = await chai
-      .request(serverUrl)
+    const updateUserResponse = await request(serverUrl)
       .post('')
       .send({
         query: updateUserQuery,
@@ -133,8 +129,7 @@ describe('[e2e] Update user', () => {
     }
 
 
-    const createUserResponse = await chai
-    .request(serverUrl)
+    const createUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: createUserQuery,
@@ -143,8 +138,7 @@ describe('[e2e] Update user', () => {
 
     
 
-    const authenticateUserResponse = await chai
-    .request(serverUrl)
+    const authenticateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: authenticateUserQuery,
@@ -154,8 +148,7 @@ describe('[e2e] Update user', () => {
     const token = authenticateUserResponse.body.data?.authenticateUser?.token
 
 
-    const updateUserResponse = await chai
-    .request(serverUrl)
+    const updateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: updateUserQuery,
@@ -180,8 +173,7 @@ describe('[e2e] Update user', () => {
     
     const token = tokenProvider.generateToken({userId: randomUUID()})
     
-    const updateUserResponse = await chai
-    .request(serverUrl)
+    const updateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: updateUserQuery,
@@ -221,24 +213,21 @@ describe('[e2e] Update user', () => {
     }
 
 
-    await chai
-    .request(serverUrl)
+    await request(serverUrl)
     .post('')
     .send({
       query: createUserQuery,
       variables: {data: userData}
     })
 
-    await chai
-    .request(serverUrl)
+    await request(serverUrl)
     .post('')
     .send({
       query: createUserQuery,
       variables: {data: otherUserData}
     })
 
-    const authenticateUserResponse = await chai
-    .request(serverUrl)
+    const authenticateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: authenticateUserQuery,
@@ -247,8 +236,7 @@ describe('[e2e] Update user', () => {
 
     const token = authenticateUserResponse.body.data?.authenticateUser?.token
 
-    const updateUserResponse = await chai
-    .request(serverUrl)
+    const updateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: updateUserQuery,
@@ -290,24 +278,21 @@ describe('[e2e] Update user', () => {
     }
 
 
-    await chai
-    .request(serverUrl)
+    await request(serverUrl)
     .post('')
     .send({
       query: createUserQuery,
       variables: {data: userData}
     })
 
-    await chai
-    .request(serverUrl)
+    await request(serverUrl)
     .post('')
     .send({
       query: createUserQuery,
       variables: { data: otherUserData }
     })
 
-    const authenticateUserResponse = await chai
-    .request(serverUrl)
+    const authenticateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: authenticateUserQuery,
@@ -316,8 +301,7 @@ describe('[e2e] Update user', () => {
 
     const token = authenticateUserResponse.body.data?.authenticateUser?.token
 
-    const updateUserResponse = await chai
-    .request(serverUrl)
+    const updateUserResponse = await request(serverUrl)
     .post('')
     .send({
       query: updateUserQuery,
