@@ -19,7 +19,8 @@ export type UserCreated = Optional<User, 'password'>
 
 
 export interface UsersRepository {
-  findByEmailOrUsername(email?: string, username?: string, id?: string): Promise<User | null>
+  findByEmail(email: string): Promise<User | null>
+  findByUsername(username: string): Promise<User | null>
   findById(id: string): Promise<User | null>
   create(user: CreateUser): Promise<UserCreated>
   save(user: UpdateUser): Promise<User>

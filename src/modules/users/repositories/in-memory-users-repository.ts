@@ -22,23 +22,7 @@ export class InMemoryUsersRepository implements UsersRepository{
 
     return user
   }
-
-  async findByEmailOrUsername(email: string, username: string, id?:string): Promise<User | null> {
-    const user = this.users.find( user =>
-      (user.email === email && (id ? user.id !== id : true)) 
-        || 
-      (user.username === username && (id ? user.id !== id : true))
-    )
-    
-    
-    if(user){
-      return user
-    }
-
-    return null
-
-  }
-
+  
   async findById(id: string): Promise<User | null> {
     const user = this.users.find(user => user.id === id)
 
@@ -58,5 +42,14 @@ export class InMemoryUsersRepository implements UsersRepository{
     this.users[userIndex].updatedAt = new Date()
 
     return this.users[userIndex]
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.users.find(user => user.email === email) || null
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return this.users.find(user => user.username === username) || null
+    
   }
 }

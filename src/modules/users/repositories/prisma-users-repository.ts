@@ -4,37 +4,20 @@ import { CreateUser, UpdateUser, UsersRepository } from "./users-repository";
 
 export class PrismaUsersRepository implements UsersRepository {
    
-  
-  findByEmailOrUsername(email?: string, username?: string, id?: string): Promise<User | null> {
-    return  prisma.user.findFirst({
-    where: {
-      OR: [
-        {
-          AND: {
-            email: {
-              equals: email
-            },
-            NOT: {
-              id
-            }
-          },
-          
-        },
-        {
-          AND: {
-            username: {
-              contains: username?.toLowerCase()
-            },
-            NOT: {
-              id
-            }
-          }
-          
-        }
-      ]
-    }
-   })
-    
+  findByEmail(email: string): Promise<User | null> {
+    return prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+  }
+
+  findByUsername(username: string): Promise<User | null> {
+    return prisma.user.findUnique({
+      where: {
+        username
+      }
+    })
   }
 
 
