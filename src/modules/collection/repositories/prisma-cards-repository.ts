@@ -3,11 +3,11 @@ import { prisma } from "../../../database/prisma";
 import { AddCard, CardsRepository } from "./cards-repository";
 
 export class PrismaCardsRepository implements CardsRepository{
-  addCard({ userId, scryfallId, quantity }: AddCard): Promise<Card> {
+  addCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
     return prisma.card.create({
       data: {
         userId,
-        scryfallId,
+        scryfallId: scryfallCardId,
         quantity 
       }
     })

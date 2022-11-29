@@ -25,7 +25,6 @@ model User {
 }
 
 model Card {
-  id         String   @id @default(uuid())
   scryfallId String   @map("scryfall_id")
   userId     String   @map("user_id")
   quantity   Int
@@ -33,5 +32,6 @@ model Card {
   updatedAt  DateTime @default(now()) @map("updated_at")
   user       User     @relation(fields: [userId], references: [id])
 
+  @@id([scryfallId, userId])
   @@map("cards")
 }
