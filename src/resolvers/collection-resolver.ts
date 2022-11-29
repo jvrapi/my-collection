@@ -3,7 +3,7 @@ import { Inject, Service } from "typedi";
 import { AddCardToCollectionInput } from "../dtos/inputs/add-card-to-collection-input";
 import { Card } from "../dtos/models/card-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
-import { AddCardToCollectionUseCase } from "../modules/cards/use-cases/add-card-to-collection-use-case";
+import { AddCardToCollectionUseCase } from "../modules/collection/use-cases/add-card-to-collection-use-case";
 import { Context } from "../types/context";
 
 @Service()
