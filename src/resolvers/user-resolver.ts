@@ -25,7 +25,7 @@ export class UserResolver {
 
   @Query(() => User)
   @UseMiddleware(EnsureAuthenticated)
-  async getUsers(@Ctx() ctx: Context){
+  async user(@Ctx() ctx: Context){
     return await this.getUserUseCase.execute(ctx.user.id)
   }
 

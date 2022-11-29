@@ -42,7 +42,7 @@ type Mutation {
 }
 
 type Query {
-  getUsers: User!
+  user: User!
 }
 
 input UpdateUserInput {
