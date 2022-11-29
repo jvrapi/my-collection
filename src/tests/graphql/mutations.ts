@@ -32,3 +32,12 @@ export const updateUserQuery = `
   }
 `
 
+export const addCardToCollectionQuery = `
+  mutation AddCardToCollection($data: AddCardToCollectionInput!) {
+    addCardToCollection(data: $data) {
+      id,
+      imageUrl
+    }
+  } 
+`
+

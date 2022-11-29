@@ -42,6 +42,9 @@ export class AddCardToCollectionUseCase{
       userId
     })
 
-    return card
+    return {
+      id: card.scryfallId,
+      imageUrl: scryfallCard.imageUrl
+    }
   }
 }
