@@ -1,7 +1,7 @@
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class AddCardToCollectionInput{
+export class AddCardInput{
   @Field()
   quantity: number
 

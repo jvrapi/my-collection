@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto"
 import request from "supertest"
 import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider"
 import { createApolloServer } from "../../../../server"
-import { addCardToCollectionQuery, authenticateUserQuery, createUserQuery } from "../../../../tests/graphql/mutations"
+import { addCardQuery, authenticateUserQuery, createUserQuery } from "../../../../tests/graphql/mutations"
 import { userData } from "../../../../tests/mocks/user"
 import { Context } from "../../../../types/context"
 
@@ -38,7 +38,7 @@ describe('[unit] Add card to collection', () => {
 
   it('should not be able to add an card to collection without an token', async () => {
 
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
     }
@@ -46,8 +46,8 @@ describe('[unit] Add card to collection', () => {
     const addCardToCollectionResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
 
 
@@ -70,7 +70,7 @@ describe('[unit] Add card to collection', () => {
       password: 'zoaoGYZn3F'
     }
 
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
     }
@@ -106,8 +106,8 @@ describe('[unit] Add card to collection', () => {
     const addCardToCollectionResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('authorization', `Bearer ${token}`)
 
@@ -124,9 +124,8 @@ describe('[unit] Add card to collection', () => {
     
   })
 
-
   it('should be able to add card to collection', async()=>{
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
     }
@@ -140,22 +139,23 @@ describe('[unit] Add card to collection', () => {
 
     const token = authenticateUserResponse.body.data.authenticateUser.token
 
-    const addCardToCollectionResponse = await request(serverUrl)
+    const addCardResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
-    expect(addCardToCollectionResponse.status).toBe(200)
-    expect(addCardToCollectionResponse.body.data.addCardToCollection.id).toBeDefined()
-    expect(addCardToCollectionResponse.body.data.addCardToCollection.imageUrl).toBeDefined()
+    expect(addCardResponse.body.data.addCard.id).toBeDefined()
+    expect(addCardResponse.body.data.addCard.imageUrl).toBeDefined()
+    expect(addCardResponse.body.data.addCard.addedAt).toBeDefined()
+    expect(addCardResponse.body.data.addCard.quantity).toBeDefined()
   } )
 
   it('should not be able to add card to collection without an quantity', async() => {
    
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 0,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
     }
@@ -169,26 +169,26 @@ describe('[unit] Add card to collection', () => {
 
     const token = authenticateUserResponse.body.data.authenticateUser.token
 
-    const addCardToCollectionResponse = await request(serverUrl)
+    const addCardResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
 
-    expect(addCardToCollectionResponse.status).toBe(200)
-    expect(addCardToCollectionResponse.body.errors[0].extensions.status).toBe('400')
-    expect(addCardToCollectionResponse.body.data).toBeNull()
-    expect(addCardToCollectionResponse.body.errors).toBeDefined()
-    expect(addCardToCollectionResponse.body.errors[0].message).toBe('You need to provide an quantity')
+    expect(addCardResponse.status).toBe(200)
+    expect(addCardResponse.body.errors[0].extensions.status).toBe('400')
+    expect(addCardResponse.body.data).toBeNull()
+    expect(addCardResponse.body.errors).toBeDefined()
+    expect(addCardResponse.body.errors[0].message).toBe('You need to provide an quantity')
 
   })
 
   it('should not be able to add card to collection without an card id', async () => {
 
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: ''
     }
@@ -202,25 +202,25 @@ describe('[unit] Add card to collection', () => {
 
     const token = authenticateUserResponse.body.data.authenticateUser.token
 
-    const addCardToCollectionResponse = await request(serverUrl)
+    const addCardResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
 
-    expect(addCardToCollectionResponse.status).toBe(200)
-    expect(addCardToCollectionResponse.body.data).toBeNull()
-    expect(addCardToCollectionResponse.body.errors).toBeDefined()
-    expect(addCardToCollectionResponse.body.errors[0].extensions.status).toBe('400')
-    expect(addCardToCollectionResponse.body.errors[0].message).toBe('You need to provide an card')
+    expect(addCardResponse.status).toBe(200)
+    expect(addCardResponse.body.data).toBeNull()
+    expect(addCardResponse.body.errors).toBeDefined()
+    expect(addCardResponse.body.errors[0].extensions.status).toBe('400')
+    expect(addCardResponse.body.errors[0].message).toBe('You need to provide an card')
     
   })
 
   it('should not be able to add card to collection with invalid user', async () => {
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
     }
@@ -228,24 +228,24 @@ describe('[unit] Add card to collection', () => {
     const tokenProvider = new JwtTokenProvider()
     const token = tokenProvider.generateToken({userId: randomUUID()})
     
-    const addCardToCollectionResponse = await request(serverUrl)
+    const addCardResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
-    expect(addCardToCollectionResponse.status).toBe(200)
-    expect(addCardToCollectionResponse.body.data).toBeNull()
-    expect(addCardToCollectionResponse.body.errors).toBeDefined()
-    expect(addCardToCollectionResponse.body.errors[0].extensions.status).toBe('400')
-    expect(addCardToCollectionResponse.body.errors[0].message).toBe('Invalid user')
+    expect(addCardResponse.status).toBe(200)
+    expect(addCardResponse.body.data).toBeNull()
+    expect(addCardResponse.body.errors).toBeDefined()
+    expect(addCardResponse.body.errors[0].extensions.status).toBe('400')
+    expect(addCardResponse.body.errors[0].message).toBe('Invalid user')
 
   })
 
   it('should not be able to add card to collection with invalid card', async () => {
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: 'wrong_id'
     }
@@ -259,24 +259,24 @@ describe('[unit] Add card to collection', () => {
 
     const token = authenticateUserResponse.body.data.authenticateUser.token
 
-    const addCardToCollectionResponse = await request(serverUrl)
+    const addCardResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
-    expect(addCardToCollectionResponse.status).toBe(200)
-    expect(addCardToCollectionResponse.body.data).toBeNull()
-    expect(addCardToCollectionResponse.body.errors).toBeDefined()
-    expect(addCardToCollectionResponse.body.errors[0].extensions.status).toBe('400')
-    expect(addCardToCollectionResponse.body.errors[0].message).toBe('Invalid card')
+    expect(addCardResponse.status).toBe(200)
+    expect(addCardResponse.body.data).toBeNull()
+    expect(addCardResponse.body.errors).toBeDefined()
+    expect(addCardResponse.body.errors[0].extensions.status).toBe('400')
+    expect(addCardResponse.body.errors[0].message).toBe('Invalid card')
 
   })
 
   it('should not be able to add an card to collection if his already in collection', async () => {
-    const addCardToCollectionData = {
+    const addCardData = {
       quantity: 1,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
     }
@@ -293,24 +293,24 @@ describe('[unit] Add card to collection', () => {
     await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
 
-    const addCardToCollectionResponse = await request(serverUrl)
+    const addCardResponse = await request(serverUrl)
     .post('')
     .send({
-      query: addCardToCollectionQuery,
-      variables: {data: addCardToCollectionData}
+      query: addCardQuery,
+      variables: {data: addCardData}
     })
     .set('Authorization', `Bearer ${token}`)
 
-    expect(addCardToCollectionResponse.status).toBe(200)
-    expect(addCardToCollectionResponse.body.data).toBeNull()
-    expect(addCardToCollectionResponse.body.errors).toBeDefined()
-    expect(addCardToCollectionResponse.body.errors[0].extensions.status).toBe('400')
-    expect(addCardToCollectionResponse.body.errors[0].message).toBe('This card already in your collection')
+    expect(addCardResponse.status).toBe(200)
+    expect(addCardResponse.body.data).toBeNull()
+    expect(addCardResponse.body.errors).toBeDefined()
+    expect(addCardResponse.body.errors[0].extensions.status).toBe('400')
+    expect(addCardResponse.body.errors[0].message).toBe('This card already in your collection')
   })
 })
