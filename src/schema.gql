@@ -3,7 +3,7 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-input AddCardToCollectionInput {
+input AddCardInput {
   cardId: String!
   quantity: Float!
 }
@@ -18,8 +18,10 @@ input AuthenticateUserInput {
 }
 
 type Card {
+  addedAt: DateTime!
   id: String!
   imageUrl: String!
+  quantity: Float!
 }
 
 input CreateUserInput {
@@ -35,14 +37,20 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 scalar DateTime
 
 type Mutation {
-  addCardToCollection(data: AddCardToCollectionInput!): Card!
+  addCard(data: AddCardInput!): Card!
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
   createUser(data: CreateUserInput!): User!
+  updateCards(data: [UpdateCardsInput!]!): [Card!]!
   updateUser(data: UpdateUserInput!): User!
 }
 
 type Query {
   user: User!
+}
+
+input UpdateCardsInput {
+  cardId: String!
+  quantity: Float!
 }
 
 input UpdateUserInput {

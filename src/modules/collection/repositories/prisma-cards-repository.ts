@@ -14,10 +14,26 @@ export class PrismaCardsRepository implements CardsRepository{
   }
 
   findByCardIdAndUserId({ scryfallCardId, userId }: FindByCardIdAndUserId): Promise<Card | null> {
-    return prisma.card.findFirst({
+    return prisma.card.findUnique({
       where: {
-        scryfallId: scryfallCardId,
-        userId
+        scryfallId_userId:{
+          scryfallId: scryfallCardId,
+          userId
+        }
+      }
+    })
+  }
+
+  saveCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
+    return prisma.card.update({
+      where: {
+        scryfallId_userId: {
+          scryfallId: scryfallCardId,
+          userId
+        }
+      },
+      data: {
+        quantity
       }
     })
   }

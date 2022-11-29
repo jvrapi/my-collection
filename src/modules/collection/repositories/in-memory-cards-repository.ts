@@ -24,4 +24,12 @@ export class InMemoryCardsRepository implements CardsRepository {
     return card
   }
 
+  async saveCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
+    const cardIndex = this.cards.findIndex(card => card.userId === userId && card.scryfallId === scryfallCardId)
+
+    this.cards[cardIndex].quantity = quantity
+
+    return this.cards[cardIndex]
+  }
+
 }

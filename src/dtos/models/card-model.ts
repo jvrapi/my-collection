@@ -8,5 +8,11 @@ export class Card {
   
   @Field()
   imageUrl: string
+
+  @Field()
+  addedAt: Date
+
+  @Field()
+  quantity: number
   
 }

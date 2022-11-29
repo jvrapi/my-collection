@@ -1,9 +1,11 @@
 import { Arg, Ctx, Mutation, Resolver, UseMiddleware } from "type-graphql";
 import { Inject, Service } from "typedi";
-import { AddCardToCollectionInput } from "../dtos/inputs/add-card-to-collection-input";
+import { AddCardInput } from "../dtos/inputs/add-card-input";
+import { UpdateCardsInput } from "../dtos/inputs/update-cards-input";
 import { Card } from "../dtos/models/card-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
 import { AddCardToCollectionUseCase } from "../modules/collection/use-cases/add-card/add-card-use-case";
+import { UpdateCardsUseCase } from "../modules/collection/use-cases/update-cards/update-cards-use-case";
 import { Context } from "../types/context";
 
 @Service()
@@ -12,13 +14,15 @@ export class CollectionResolver{
 
   constructor(
     @Inject()
-    private addCardToCollectionUseCase: AddCardToCollectionUseCase
+    private addCardToCollectionUseCase: AddCardToCollectionUseCase,
+    @Inject()
+    private updateCardsUseCase: UpdateCardsUseCase
   ){}
 
   @Mutation(() => Card)
   @UseMiddleware(EnsureAuthenticated)
-  async addCardToCollection(
-    @Arg('data') data: AddCardToCollectionInput,
+  async addCard(
+    @Arg('data') data: AddCardInput,
     @Ctx() ctx: Context
   ){
     const {cardId,quantity} = data
@@ -29,4 +33,17 @@ export class CollectionResolver{
       userId: user.id
     })
   }
+
+  @Mutation(() => [Card])
+  @UseMiddleware(EnsureAuthenticated)
+  async updateCards(
+    @Arg('data', type => [UpdateCardsInput]) data: [UpdateCardsInput],
+    @Ctx() ctx: Context
+  ){
+    return this.updateCardsUseCase.execute({
+      userId: ctx.user.id,
+      cards: data
+    }) 
+  }
+
 }
