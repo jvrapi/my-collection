@@ -3,6 +3,11 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input AddCardToCollectionInput {
+  cardId: String!
+  quantity: Float!
+}
+
 type AuthModel {
   token: String!
 }
@@ -10,6 +15,11 @@ type AuthModel {
 input AuthenticateUserInput {
   password: String!
   username: String!
+}
+
+type Card {
+  id: String!
+  imageUrl: String!
 }
 
 input CreateUserInput {
@@ -25,6 +35,7 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 scalar DateTime
 
 type Mutation {
+  addCardToCollection(data: AddCardToCollectionInput!): Card!
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!): User!
