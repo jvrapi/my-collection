@@ -2,11 +2,11 @@ import { ApolloServer } from "@apollo/server"
 import FakeTimers from "@sinonjs/fake-timers"
 import { randomUUID } from "node:crypto"
 import request from "supertest"
-import { JwtTokenProvider } from "../../../providers/token/jwt-token-provider"
-import { createApolloServer } from "../../../server"
-import { addCardToCollectionQuery, authenticateUserQuery, createUserQuery } from "../../../tests/graphql/mutations"
-import { userData } from "../../../tests/mocks/user"
-import { Context } from "../../../types/context"
+import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider"
+import { createApolloServer } from "../../../../server"
+import { addCardToCollectionQuery, authenticateUserQuery, createUserQuery } from "../../../../tests/graphql/mutations"
+import { userData } from "../../../../tests/mocks/user"
+import { Context } from "../../../../types/context"
 
 describe('[unit] Add card to collection', () => {
   let testServer: ApolloServer<Context>

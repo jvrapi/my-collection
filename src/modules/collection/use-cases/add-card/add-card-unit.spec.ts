@@ -1,12 +1,12 @@
 import { randomUUID } from "node:crypto"
-import { userData } from "../../../tests/mocks/user"
-import { InMemoryScryfallRepository } from "../../scryfall/repositories/in-memory-scryfall-repository"
-import { ScryfallRepository } from "../../scryfall/repositories/scryfall-repository"
-import { InMemoryUsersRepository } from "../../users/repositories/in-memory-users-repository"
-import { UsersRepository } from "../../users/repositories/users-repository"
-import { CardsRepository } from "../repositories/cards-repository"
-import { InMemoryCardsRepository } from "../repositories/in-memory-cards-repository"
-import { AddCardToCollectionUseCase } from "./add-card-to-collection-use-case"
+import { userData } from "../../../../tests/mocks/user"
+import { InMemoryScryfallRepository } from "../../../scryfall/repositories/in-memory-scryfall-repository"
+import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository"
+import { InMemoryUsersRepository } from "../../../users/repositories/in-memory-users-repository"
+import { UsersRepository } from "../../../users/repositories/users-repository"
+import { CardsRepository } from "../../repositories/cards-repository"
+import { InMemoryCardsRepository } from "../../repositories/in-memory-cards-repository"
+import { AddCardToCollectionUseCase } from "./add-card-use-case"
 
 describe('[unit] Add card to collection', () => {
   let cardsRepository: CardsRepository

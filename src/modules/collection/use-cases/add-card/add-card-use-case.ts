@@ -1,8 +1,8 @@
 import { Inject, Service } from "typedi";
-import { ApiError } from "../../../errors/Error";
-import { ScryfallRepository } from "../../scryfall/repositories/scryfall-repository";
-import { UsersRepository } from "../../users/repositories/users-repository";
-import { AddCard, CardsRepository } from "../repositories/cards-repository";
+import { ApiError } from "../../../../errors/Error";
+import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository";
+import { UsersRepository } from "../../../users/repositories/users-repository";
+import { AddCard, CardsRepository } from "../../repositories/cards-repository";
 
 @Service()
 export class AddCardToCollectionUseCase{
