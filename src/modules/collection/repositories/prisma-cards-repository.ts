@@ -1,6 +1,6 @@
 import { Card } from "@prisma/client";
 import { prisma } from "../../../database/prisma";
-import { AddCard, CardsRepository } from "./cards-repository";
+import { AddCard, CardsRepository, FindByCardIdAndUserId } from "./cards-repository";
 
 export class PrismaCardsRepository implements CardsRepository{
   addCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
@@ -9,6 +9,15 @@ export class PrismaCardsRepository implements CardsRepository{
         userId,
         scryfallId: scryfallCardId,
         quantity 
+      }
+    })
+  }
+
+  findByCardIdAndUserId({ scryfallCardId, userId }: FindByCardIdAndUserId): Promise<Card | null> {
+    return prisma.card.findFirst({
+      where: {
+        scryfallId: scryfallCardId,
+        userId
       }
     })
   }

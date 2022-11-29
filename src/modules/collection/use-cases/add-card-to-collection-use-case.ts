@@ -36,6 +36,15 @@ export class AddCardToCollectionUseCase{
       throw new ApiError('Invalid card')
     }
 
+    const cardAlreadyInCollection = await this.cardsRepository.findByCardIdAndUserId({
+      scryfallCardId,
+      userId
+    })
+
+    if(cardAlreadyInCollection){
+      throw new ApiError('This card already in your collection')
+    }
+
     const card = await this.cardsRepository.addCard({
       quantity,
       scryfallCardId,

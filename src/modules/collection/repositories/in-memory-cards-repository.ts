@@ -1,13 +1,11 @@
 import { Card } from "@prisma/client";
-import { randomUUID } from "node:crypto";
-import { AddCard, CardsRepository } from "./cards-repository";
+import { AddCard, CardsRepository, FindByCardIdAndUserId } from "./cards-repository";
 
 export class InMemoryCardsRepository implements CardsRepository {
   private cards: Card[] = []
   
   async addCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
     const card: Card = {
-      id: randomUUID(),
       userId,
       scryfallId: scryfallCardId,
       quantity,
@@ -16,6 +14,12 @@ export class InMemoryCardsRepository implements CardsRepository {
     }
 
     this.cards.push(card)
+
+    return card
+  }
+
+  async findByCardIdAndUserId({ scryfallCardId, userId }: FindByCardIdAndUserId): Promise<Card | null> {
+    const card = this.cards.find(card => card.scryfallId === scryfallCardId && card.userId === userId) || null
 
     return card
   }

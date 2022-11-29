@@ -111,4 +111,31 @@ describe('[unit] Add card to collection', () => {
     expect(findUserByIdSpy).toHaveBeenCalled()
     expect(findCardByIdSpy).toHaveBeenCalled()
   })
+
+  it('should not be able to add an card to collection if his already in collection', async () => {
+    const addCardSpy = jest.spyOn(cardsRepository, 'addCard')
+    const findUserByIdSpy = jest.spyOn(usersRepository, 'findById')
+    const findCardByIdSpy = jest.spyOn(scryfallRepository, 'findCardById')
+    const findCardByUserIdAndCardId = jest.spyOn(cardsRepository, 'findByCardIdAndUserId')
+    
+    const user = await usersRepository.create(userData)
+    
+    await addCardToCollectionUseCase.execute({
+      scryfallCardId: scryfallCard.id,
+      quantity: 1,
+      userId: user.id
+    })
+    
+    await expect(addCardToCollectionUseCase.execute({
+      scryfallCardId: scryfallCard.id,
+      quantity: 1,
+      userId: user.id
+    })).rejects.toThrow('This card already in your collection')
+
+    expect(findUserByIdSpy).toHaveBeenCalled()
+    expect(findCardByIdSpy).toHaveBeenCalled()
+    expect(findCardByUserIdAndCardId).toHaveBeenCalled()
+    expect(addCardSpy).toHaveBeenCalledTimes(1)
+
+  })
 })
