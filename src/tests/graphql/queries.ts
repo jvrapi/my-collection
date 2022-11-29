@@ -1,6 +1,6 @@
 export const getUsersQuery = `
   query GetUsers {
-    getUsers {
+    user {
       id,
       name,
       username,

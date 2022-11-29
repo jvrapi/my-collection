@@ -126,7 +126,7 @@ describe('[e2e] Get user', () => {
 
     expect(getUsersResponse.status).toBe(200)
     expect(getUsersResponse.body.errors).toBeUndefined()
-    expect(getUsersResponse.body.data.getUsers).toBeDefined()
+    expect(getUsersResponse.body.data.user).toBeDefined()
 
   })
 })
