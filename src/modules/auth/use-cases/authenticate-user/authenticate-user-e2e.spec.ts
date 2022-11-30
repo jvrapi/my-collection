@@ -1,7 +1,8 @@
 import { ApolloServer } from '@apollo/server'
-import request from 'supertest'
+import request from 'supertest-graphql'
 import { createApolloServer } from '../../../../server'
 import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/mutations'
+import { UserAuthenticated, UserCreated } from '../../../../tests/graphql/types'
 import { userData } from '../../../../tests/mocks/user'
 import { Context } from '../../../../types/context'
 
@@ -12,12 +13,14 @@ describe('[e2e] Authenticate user', () => {
   
   beforeAll(async () => {
     const {server, url}= await createApolloServer()
+    
     testServer = server
+    
     serverUrl = url
-    await request(serverUrl).post('').send({
-      query: createUserQuery,
-      variables: {data: userData}
-    })
+    
+    await request<UserCreated>(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: userData})
     
   })
 
@@ -31,14 +34,13 @@ describe('[e2e] Authenticate user', () => {
       username: userData.email,
       password: userData.password
     }
-    const response = await request(serverUrl).post('').send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeUndefined()
-    expect(response.body.data?.authenticateUser?.token).toBeDefined()
+    const response = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
+    
+    expect(response.errors).toBeUndefined()
+    expect(response.data?.authenticateUser?.token).toBeDefined()
   })
   
   it('should not be able to authenticate user without username or password', async () => {
@@ -46,15 +48,16 @@ describe('[e2e] Authenticate user', () => {
       username: '',
       password: ''
     }
-    const response = await request(serverUrl).post('').send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
+
+    const response = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeDefined()
-    expect(response.body.data).toBeNull()
+    expect(response.errors).toBeDefined()
+    expect(response.errors![0].extensions.status).toBe('400')
+    expect(response.errors![0].message).toBe('Missing some information')
+    expect(response.data).toBeNull()
   })
   
   it('should not be able to authenticate user with wrong password', async () => {
@@ -63,15 +66,14 @@ describe('[e2e] Authenticate user', () => {
       password: 'wrong-password',
     }
 
-    const response = await request(serverUrl).post('').send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
+    const response = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
-
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeDefined()
-    expect(response.body.data).toBeNull()
+    expect(response.errors).toBeDefined()
+    expect(response.errors![0].extensions.status).toBe('400')
+    expect(response.errors![0].message).toBe('Credentials invalid')
+    expect(response.data).toBeNull()
   })
   
   it('should not be able to authenticate user with invalid email', async () => {
@@ -80,15 +82,15 @@ describe('[e2e] Authenticate user', () => {
       password: userData.password,
     }
 
-    const response = await request(serverUrl).post('').send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
+    const response = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeDefined()
-    expect(response.body.data).toBeNull()
+    expect(response.errors).toBeDefined()
+    expect(response.errors![0].extensions.status).toBe('400')
+    expect(response.errors![0].message).toBe('Credentials invalid')
+    expect(response.data).toBeNull()
   })
   
   it('should not be able to authenticate user with invalid username', async () => {
@@ -97,15 +99,15 @@ describe('[e2e] Authenticate user', () => {
       password: userData.password,
     }
 
-    const response = await request(serverUrl).post('').send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
+    const response = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
 
-    expect(response.status).toBe(200)
-    expect(response.body.errors).toBeDefined()
-    expect(response.body.data).toBeNull()
+    expect(response.errors).toBeDefined()
+    expect(response.errors![0].extensions.status).toBe('400')
+    expect(response.errors![0].message).toBe('Credentials invalid')
+    expect(response.data).toBeNull()
   })
   
 })

@@ -35,13 +35,13 @@ export class AuthenticateUserUseCase{
     }
 
     if(!user){
-      throw new Error('E-mail or password incorrect')
+      throw new ApiError('Credentials invalid')
     }
 
     const passwordIsCorrect = await this.passwordProvider.compare(password, user.password)
 
     if(!passwordIsCorrect){
-      throw new Error('E-mail or password incorrect')
+      throw new ApiError('Credentials invalid')
     }
 
     const token = this.tokenProvider.generateToken({userId: user.id})

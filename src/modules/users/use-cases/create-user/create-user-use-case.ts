@@ -18,10 +18,14 @@ export class CreateUserUseCase{
     const emailAlreadyInUse = await this.usersRepository.findByEmail(email)
     const usernameAlreadyInUse = await this.usersRepository.findByUsername(username)
 
-    if(emailAlreadyInUse || usernameAlreadyInUse){
-      throw new ApiError('Users already exists!')
+    if(emailAlreadyInUse){
+      throw new ApiError('E-mail already in use')
     }
 
+    if(usernameAlreadyInUse){
+      throw new ApiError('Username already in use')
+    }
+    
     const passwordHashed = await this.passwordProvider.hashPassword(password)
     
     const userCreated= await this.usersRepository.create({

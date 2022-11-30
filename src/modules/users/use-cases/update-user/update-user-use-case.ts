@@ -26,7 +26,7 @@ export class UpdateUserUseCase{
     if(email !== user.email){
       const newEmailAlreadyInUse = await this.usersRepository.findByEmail(email)
       if(newEmailAlreadyInUse){
-        throw new ApiError('New email already in use')
+        throw new ApiError('New e-mail already in use')
       }
     }
 

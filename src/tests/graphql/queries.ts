@@ -1,4 +1,6 @@
-export const getUsersQuery = `
+import gql from "graphql-tag";
+
+export const getUsersQuery = gql`
   query GetUsers {
     user {
       id,
@@ -6,7 +8,7 @@ export const getUsersQuery = `
       username,
       email,
       createdAt
-      updatedAt
+      updatedAt,
     }
   }
 `

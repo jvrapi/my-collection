@@ -1,5 +1,27 @@
-import { User } from "../../dtos/models/users-model";
-
+import { Card as CardModel } from "../../dtos/models/card-model";
+import { User as UserModel } from "../../dtos/models/users-model";
 export interface UserCreated {
-  createUser: User
+  createUser: UserModel
+}
+
+export interface UserUpdated {
+  updateUser: UserModel
+}
+
+export interface UserAuthenticated{
+  authenticateUser: {
+    token: string
+  }
+}
+
+export interface User {
+  user: UserModel
+}
+
+export interface CardAdded {
+  addCard: CardModel
+}
+
+export interface CardUpdated {
+  updateCards: CardModel[]
 }

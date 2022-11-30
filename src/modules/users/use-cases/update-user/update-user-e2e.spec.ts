@@ -1,10 +1,11 @@
 import { ApolloServer } from "@apollo/server";
 import FakeTimers from "@sinonjs/fake-timers";
-import { randomUUID } from "crypto";
-import request from 'supertest';
+import { randomUUID } from "node:crypto";
+import request from 'supertest-graphql';
 import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider";
 import { createApolloServer } from "../../../../server";
 import { authenticateUserQuery, createUserQuery, updateUserQuery } from "../../../../tests/graphql/mutations";
+import { UserAuthenticated, UserCreated, UserUpdated } from "../../../../tests/graphql/types";
 import { userData } from "../../../../tests/mocks/user";
 import { Context } from "../../../../types/context";
 
@@ -12,11 +13,18 @@ describe('[e2e] Update user', () => {
   let testServer: ApolloServer<Context>
   let serverUrl: string
   
+  const authenticateData = {
+    username: userData.email,
+    password: userData.password
+  }
+  
   beforeAll(async () => {
     const {server, url}= await createApolloServer()
     testServer = server
     serverUrl = url
+    
   })
+
   
   afterAll(async () => {
     await testServer.stop()
@@ -29,84 +37,41 @@ describe('[e2e] Update user', () => {
       username: 'uxfCtEeuyR'
     }
 
-    const updateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: updateUserQuery,
-      variables: {data}
-    })
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
 
-
-
-    expect(updateUserResponse.status).toBe(200)
-
-    expect(updateUserResponse.body.errors[0].extensions.status).toBe('401')
-    
-    expect(updateUserResponse.body.errors).toBeDefined()
-    
-    expect(updateUserResponse.body.data).toBeNull()
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('401')
+    expect(updateUserResponse.data).toBeNull()
   })
 
   it('should not be able to update a user with expired token', async () => {
     const clock = FakeTimers.install();
 
-    const createUserData = {
-      email: 'ipi@jijacbij.la',
-      name: 'Luke Higgins',
-      username: 'uSuMsUMear',
-      password: 'zoaoGYZn3F'
+    const data = {
+      email: userData.email,
+      name: userData.name,
+      username: userData.username,
     }
 
-    const updateUserData = {
-      email: createUserData.email,
-      name: createUserData.name,
-      username: createUserData.username,
+    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
-    }
-
-
-    const authenticateData = {
-      username: createUserData.email,
-      password: createUserData.password
-    }
-
-
-
-    await request(serverUrl)
-    .post('')
-    .send({
-      query: createUserQuery,
-      variables: {data: createUserData, }
-    })
-
-    const authenticateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
-
-    const token = authenticateUserResponse.body.data?.authenticateUser?.token
+    const token = authenticateUserResponse.data?.authenticateUser?.token
 
 
     await clock.tickAsync(16000);
 
-    const updateUserResponse = await request(serverUrl)
-      .post('')
-      .send({
-        query: updateUserQuery,
-        variables: {data: updateUserData}
-      })
-      .set('authorization', `Bearer ${token}`)
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
+    .set('authorization', `Bearer ${token}`)
 
-
-    expect(updateUserResponse.status).toBe(200)
-
-    expect(updateUserResponse.body.errors[0].extensions.status).toBe('401')
-        
-    expect(updateUserResponse.body.errors).toBeDefined()
-        
-    expect(updateUserResponse.body.data).toBeNull()
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('401')
+    expect(updateUserResponse.data).toBeNull()
     
     clock.uninstall();
     
@@ -119,43 +84,30 @@ describe('[e2e] Update user', () => {
       username: 'PZgyIIEyGl'
     }
 
-    const authenticateData = {
-      username: userData.email,
-      password: userData.password
-    }
+
+    const createUserResponse = await request<UserCreated>(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: userData})
 
 
-    const createUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: createUserQuery,
-      variables: {data: userData}
-    })
+    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
-    
-
-    const authenticateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
-
-    const token = authenticateUserResponse.body.data?.authenticateUser?.token
+    const token = authenticateUserResponse.data?.authenticateUser?.token
 
 
-    const updateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: updateUserQuery,
-      variables: {data}
-    })
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
     .set('authorization', `Bearer ${token}`)
 
-    expect(updateUserResponse.status).toBe(200)
-    expect(updateUserResponse.body.errors).toBeUndefined()
-    expect(updateUserResponse.body.data.updateUser.id).toEqual(createUserResponse.body.data.createUser.id)
-    expect(updateUserResponse.body.data.updateUser.updatedAt).not.toEqual(createUserResponse.body.data.createUser.updatedAt)
+    expect(updateUserResponse.errors).toBeUndefined()
+    expect(updateUserResponse.data?.updateUser.id).toEqual(createUserResponse.data?.createUser.id)
+    expect(updateUserResponse.data?.updateUser.updatedAt).not.toEqual(createUserResponse.data?.createUser.updatedAt)
+    expect(updateUserResponse.data?.updateUser.email).toEqual(data.email)
+    expect(updateUserResponse.data?.updateUser.username).toEqual(data.username)
+    expect(updateUserResponse.data?.updateUser.name).toEqual(data.name)
   })
 
   it('should not be able to update a non existing user',async () => {
@@ -169,21 +121,18 @@ describe('[e2e] Update user', () => {
     
     const token = tokenProvider.generateToken({userId: randomUUID()})
     
-    const updateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: updateUserQuery,
-      variables: {data}
-    })
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
     .set('authorization', `Bearer ${token}`)
-    
-    expect(updateUserResponse.status).toBe(200)
 
-    expect(updateUserResponse.body.errors[0].extensions.status).toBe('400')
     
-    expect(updateUserResponse.body.errors).toBeDefined()
+
     
-    expect(updateUserResponse.body.data).toBeNull()
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('400')
+    expect(updateUserResponse.errors![0].message).toBe('Invalid user')
+    expect(updateUserResponse.data).toBeNull()
   })
   
   it('should not be able to update email if his already in use', async () => {
@@ -201,54 +150,35 @@ describe('[e2e] Update user', () => {
       username: 'THFVWsCTuz'
     }
 
+    await request<UserCreated>(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: userData})
+   
+
+    await request<UserCreated>(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: otherUserData})
     
 
-    const authenticateData = {
-      username: userData.email,
-      password: userData.password
-    }
+    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
 
 
-    await request(serverUrl)
-    .post('')
-    .send({
-      query: createUserQuery,
-      variables: {data: userData}
-    })
 
-    await request(serverUrl)
-    .post('')
-    .send({
-      query: createUserQuery,
-      variables: {data: otherUserData}
-    })
+    const token = authenticateUserResponse.data?.authenticateUser?.token
 
-    const authenticateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
 
-    const token = authenticateUserResponse.body.data?.authenticateUser?.token
-
-    const updateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: updateUserQuery,
-      variables: {data}
-    })
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
     .set('authorization', `Bearer ${token}`)
 
-    expect(updateUserResponse.status).toBe(200)
 
-    expect(updateUserResponse.body.errors).toBeDefined()
-    
-    expect(updateUserResponse.body.errors[0].extensions.status).toBe('400')
-
-    expect(updateUserResponse.body.errors[0].message).toBe('New email already in use')
-    
-    expect(updateUserResponse.body.data).toBeNull()
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('400')
+    expect(updateUserResponse.errors![0].message).toBe('New e-mail already in use')
+    expect(updateUserResponse.data).toBeNull()
   })
 
   it('should not be able to update username if his already in use', async () => {
@@ -267,52 +197,31 @@ describe('[e2e] Update user', () => {
       username: otherUserData.username
     }
 
-  
-    const authenticateData = {
-      username: userData.email,
-      password: userData.password
-    }
+    await request<UserCreated>(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: userData})
+
+    await request<UserCreated>(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: otherUserData})
+    
+
+    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
+
+    const token = authenticateUserResponse.data?.authenticateUser?.token
 
 
-    await request(serverUrl)
-    .post('')
-    .send({
-      query: createUserQuery,
-      variables: {data: userData}
-    })
-
-    await request(serverUrl)
-    .post('')
-    .send({
-      query: createUserQuery,
-      variables: { data: otherUserData }
-    })
-
-    const authenticateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: authenticateUserQuery,
-      variables: {data: authenticateData}
-    })
-
-    const token = authenticateUserResponse.body.data?.authenticateUser?.token
-
-    const updateUserResponse = await request(serverUrl)
-    .post('')
-    .send({
-      query: updateUserQuery,
-      variables: {data}
-    })
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
     .set('authorization', `Bearer ${token}`)
 
-    expect(updateUserResponse.status).toBe(200)
 
-    expect(updateUserResponse.body.errors).toBeDefined()
-    
-    expect(updateUserResponse.body.errors[0].extensions.status).toBe('400')
-
-    expect(updateUserResponse.body.errors[0].message).toBe('New username already in use')
-    
-    expect(updateUserResponse.body.data).toBeNull()
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('400')
+    expect(updateUserResponse.errors![0].message).toBe('New username already in use')
+    expect(updateUserResponse.data).toBeNull()
   })
 })
