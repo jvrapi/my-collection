@@ -56,7 +56,7 @@ describe('[unit] Update user', () => {
       email: 'ko@relzueho.mw',
       username: 'qXIwaDEaFY',
       name: 'Bertha Joseph'
-    })).rejects.toThrow('New email already in use')
+    })).rejects.toThrow('New e-mail already in use')
 
     expect(findByIdSpy).toHaveBeenCalled()
     expect(findByUsernameSpy).not.toHaveBeenCalled()

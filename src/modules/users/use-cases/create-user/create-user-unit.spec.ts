@@ -35,7 +35,10 @@ describe('[unit] Create user', () => {
 
   it('should not be able to create a user with same username', async () => {
     
-    await createUserUseCase.execute(userData)
+    await createUserUseCase.execute({
+      ...userData,
+      email: 'ihuguvur@ru.cu'
+    })
 
     await expect(createUserUseCase.execute(userData)).rejects.toThrowError()
 
