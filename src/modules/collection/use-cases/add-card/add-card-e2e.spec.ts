@@ -174,8 +174,7 @@ describe('[unit] Add card to collection', () => {
 
     expect(addCardResponse.data).toBeNull()
     expect(addCardResponse.errors).toBeDefined()
-    expect(addCardResponse.errors![0].extensions.status).toBe('400')
-    expect(addCardResponse.errors![0].message).toBe('Invalid user')
+    expect(addCardResponse.errors![0].extensions.status).toBe('401')
 
   })
 

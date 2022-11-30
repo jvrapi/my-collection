@@ -1,6 +1,8 @@
 import { ApolloServer } from "@apollo/server"
 import FakeTimers from "@sinonjs/fake-timers"
+import { randomUUID } from "crypto"
 import request from 'supertest-graphql'
+import { JwtTokenProvider } from "../../../../providers/token/jwt-token-provider"
 import { createApolloServer } from "../../../../server"
 import { authenticateUserQuery, createUserQuery } from "../../../../tests/graphql/mutations"
 import { getUsersQuery } from "../../../../tests/graphql/queries"
@@ -61,6 +63,27 @@ describe('[e2e] Get user', () => {
 
     clock.uninstall();
 
+  })
+
+  it('should not be able to get a non registered user',async () => {
+    const data = {
+      email: 'kacti@haraak.by',
+      name: 'Beulah Osborne',
+      username: 'awjYdtKYlb'
+    }
+
+    const tokenProvider = new JwtTokenProvider()
+    
+    const token = tokenProvider.generateToken({userId: randomUUID()})
+    
+    const updateUserResponse = await request(serverUrl)
+    .query(getUsersQuery)
+    .variables({data})
+    .set('authorization', `Bearer ${token}`)
+    
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('401')
+    expect(updateUserResponse.data).toBeNull()
   })
 
   it('should be able to get user', async () => {

@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto"
 import { userData } from "../../../../tests/mocks/user"
 import { InMemoryUsersRepository } from "../../repositories/in-memory-users-repository"
 import { UsersRepository } from "../../repositories/users-repository"
@@ -35,24 +34,7 @@ describe('[unit] Update user', () => {
     
   })
 
-  it('should not be able to update a non existing user', async () => {
-    const findByIdSpy = jest.spyOn(usersRepository,'findById')
-    const findByEmailSpy = jest.spyOn(usersRepository,'findByEmail')
-    const findByUsernameSpy = jest.spyOn(usersRepository,'findByUsername')
-    const saveSpy = jest.spyOn(usersRepository,'save')
-    
-    await expect (updateUserUseCase.execute({
-      id: randomUUID(),
-      email: 'vi@arafbo.om',
-      username: 'qXIwaDEaFY',
-      name: 'Bertha Joseph'
-    })).rejects.toThrow('Invalid user')
-
-    expect(findByIdSpy).toHaveBeenCalled()
-    expect(findByEmailSpy).not.toHaveBeenCalled()
-    expect(findByUsernameSpy).not.toHaveBeenCalled()
-    expect(saveSpy).not.toHaveBeenCalled()
-  })
+ 
 
   it('should not be able to update email if his already in use', async () => {
     const findByIdSpy = jest.spyOn(usersRepository,'findById')

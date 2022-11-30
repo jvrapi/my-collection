@@ -4,6 +4,7 @@ import { AddCardInput } from "../dtos/inputs/add-card-input";
 import { UpdateCardsInput } from "../dtos/inputs/update-cards-input";
 import { Card } from "../dtos/models/card-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
+import { EnsureRegistered } from "../middlewares/ensure-registered";
 import { AddCardToCollectionUseCase } from "../modules/collection/use-cases/add-card/add-card-use-case";
 import { UpdateCardsUseCase } from "../modules/collection/use-cases/update-cards/update-cards-use-case";
 import { Context } from "../types/context";
@@ -20,7 +21,7 @@ export class CollectionResolver{
   ){}
 
   @Mutation(() => Card)
-  @UseMiddleware(EnsureAuthenticated)
+  @UseMiddleware(EnsureAuthenticated, EnsureRegistered)
   async addCard(
     @Arg('data') data: AddCardInput,
     @Ctx() ctx: Context
@@ -35,7 +36,7 @@ export class CollectionResolver{
   }
 
   @Mutation(() => [Card])
-  @UseMiddleware(EnsureAuthenticated)
+  @UseMiddleware(EnsureAuthenticated, EnsureRegistered)
   async updateCards(
     @Arg('data', type => [UpdateCardsInput]) data: [UpdateCardsInput],
     @Ctx() ctx: Context

@@ -22,7 +22,7 @@ describe('[unit] Add card to collection', () => {
     cardsRepository = new InMemoryCardsRepository()
     usersRepository = new InMemoryUsersRepository()
     scryfallRepository = new InMemoryScryfallRepository(scryfallCard)
-    addCardToCollectionUseCase = new AddCardToCollectionUseCase(cardsRepository, usersRepository, scryfallRepository)
+    addCardToCollectionUseCase = new AddCardToCollectionUseCase(cardsRepository,  scryfallRepository)
   })
 
 
@@ -79,19 +79,7 @@ describe('[unit] Add card to collection', () => {
     expect(findCardByIdSpy).not.toHaveBeenCalled()
   })
 
-  it('should not be able to add card to collection with invalid user', async () => {
-    const addCardSpy = jest.spyOn(cardsRepository, 'addCard')
-    const findUserByIdSpy = jest.spyOn(usersRepository, 'findById')
-    
-    await expect(addCardToCollectionUseCase.execute({
-      quantity: 1,
-      userId: '',
-      scryfallCardId: randomUUID()
-    })).rejects.toThrow('Invalid user')
-    
-    expect(addCardSpy).not.toHaveBeenCalled()
-    expect(findUserByIdSpy).toHaveBeenCalled()
-  })
+  
 
   it('should not be able to add card to collection with invalid card', async () => {
     const addCardSpy = jest.spyOn(cardsRepository, 'addCard')

@@ -4,6 +4,7 @@ import { CreateUserInput } from "../dtos/inputs/create-user-input";
 import { UpdateUserInput } from "../dtos/inputs/update-user-input";
 import { User } from "../dtos/models/users-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
+import { EnsureRegistered } from "../middlewares/ensure-registered";
 import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
 import { GetUserUseCase } from "../modules/users/use-cases/get-user/get-user-use-case";
 import { UpdateUserUseCase } from "../modules/users/use-cases/update-user/update-user-use-case";
@@ -24,7 +25,7 @@ export class UserResolver {
   ){}
 
   @Query(() => User)
-  @UseMiddleware(EnsureAuthenticated)
+  @UseMiddleware(EnsureAuthenticated, EnsureRegistered)
   async user(@Ctx() ctx: Context){
     return await this.getUserUseCase.execute(ctx.user.id)
   }
@@ -35,7 +36,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  @UseMiddleware(EnsureAuthenticated)
+  @UseMiddleware(EnsureAuthenticated, EnsureRegistered)
   async updateUser(
       @Arg('data') data: UpdateUserInput,
       @Ctx() ctx: Context

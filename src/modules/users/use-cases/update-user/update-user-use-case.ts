@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { Inject, Service } from "typedi";
 import { UpdateUserInput } from "../../../../dtos/inputs/update-user-input";
 import { ApiError } from "../../../../errors/Error";
@@ -16,21 +17,19 @@ export class UpdateUserUseCase{
   ){}
 
   async execute({id,email,name,username}: UpdateUserUseCaseRequest){ 
-    const user = await this.usersRepository.findById(id)
+    const user = await this.usersRepository.findById(id) as User
 
 
-    if(!user){
-      throw new ApiError('Invalid user')
-    }
+    
 
-    if(email !== user.email){
+    if(email !== user?.email){
       const newEmailAlreadyInUse = await this.usersRepository.findByEmail(email)
       if(newEmailAlreadyInUse){
         throw new ApiError('New e-mail already in use')
       }
     }
 
-    if(username !== user.username){
+    if(username !== user?.username){
       const newUsernameAlreadyInUse = await this.usersRepository.findByUsername(username)
       if(newUsernameAlreadyInUse){
         throw new ApiError('New username already in use')

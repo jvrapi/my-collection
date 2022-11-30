@@ -76,7 +76,28 @@ describe('[e2e] Update user', () => {
     clock.uninstall();
     
   })
-  
+
+  it('should not be able to update a non registered user',async () => {
+    const data = {
+      email: 'kacti@haraak.by',
+      name: 'Beulah Osborne',
+      username: 'awjYdtKYlb'
+    }
+
+    const tokenProvider = new JwtTokenProvider()
+    
+    const token = tokenProvider.generateToken({userId: randomUUID()})
+    
+    const updateUserResponse = await request<UserUpdated>(serverUrl)
+    .mutate(updateUserQuery)
+    .variables({data})
+    .set('authorization', `Bearer ${token}`)
+
+    expect(updateUserResponse.errors).toBeDefined()
+    expect(updateUserResponse.errors![0].extensions.status).toBe('401')
+    expect(updateUserResponse.data).toBeNull()
+  })
+
   it('should be able to update a user', async () => {
     const data = {
       email: 'hithasmo@fiz.cf',
@@ -108,31 +129,6 @@ describe('[e2e] Update user', () => {
     expect(updateUserResponse.data?.updateUser.email).toEqual(data.email)
     expect(updateUserResponse.data?.updateUser.username).toEqual(data.username)
     expect(updateUserResponse.data?.updateUser.name).toEqual(data.name)
-  })
-
-  it('should not be able to update a non existing user',async () => {
-    const data = {
-      email: 'kacti@haraak.by',
-      name: 'Beulah Osborne',
-      username: 'awjYdtKYlb'
-    }
-
-    const tokenProvider = new JwtTokenProvider()
-    
-    const token = tokenProvider.generateToken({userId: randomUUID()})
-    
-    const updateUserResponse = await request<UserUpdated>(serverUrl)
-    .mutate(updateUserQuery)
-    .variables({data})
-    .set('authorization', `Bearer ${token}`)
-
-    
-
-    
-    expect(updateUserResponse.errors).toBeDefined()
-    expect(updateUserResponse.errors![0].extensions.status).toBe('400')
-    expect(updateUserResponse.errors![0].message).toBe('Invalid user')
-    expect(updateUserResponse.data).toBeNull()
   })
   
   it('should not be able to update email if his already in use', async () => {
