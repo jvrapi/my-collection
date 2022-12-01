@@ -33,10 +33,10 @@ export class CreateUserUseCase{
       name,
       password: passwordHashed,
       username
-    })
+    })    
 
-    
-
-    return userCreated.id
+    return {
+      id: userCreated.id
+    }
   }
 }
