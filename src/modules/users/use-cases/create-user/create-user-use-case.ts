@@ -35,8 +35,8 @@ export class CreateUserUseCase{
       username
     })
 
-    delete userCreated.password
+    
 
-    return userCreated
+    return userCreated.id
   }
 }

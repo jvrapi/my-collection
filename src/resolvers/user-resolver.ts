@@ -3,6 +3,7 @@ import { Inject, Service } from 'typedi';
 import { CreateUserInput } from "../dtos/inputs/create-user-input";
 import { UpdateUserInput } from "../dtos/inputs/update-user-input";
 import { Card } from "../dtos/models/card-model";
+import { UserCreated } from "../dtos/models/user-created-model";
 import { User } from "../dtos/models/users-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
 import { EnsureRegistered } from "../middlewares/ensure-registered";
@@ -40,7 +41,7 @@ export class UserResolver {
     return await this.getCollectionUseCase.execute(user.id)
   }
 
-  @Mutation(()=> User)
+  @Mutation(()=> UserCreated)
   async createUser(@Arg('data') data: CreateUserInput) {
     return await this.createUserUseCase.execute(data)
   }

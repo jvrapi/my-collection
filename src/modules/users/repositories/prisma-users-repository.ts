@@ -8,6 +8,9 @@ export class PrismaUsersRepository implements UsersRepository {
     return prisma.user.findUnique({
       where: {
         email
+      },
+      include: {
+        Collection: true
       }
     })
   }
@@ -16,22 +19,34 @@ export class PrismaUsersRepository implements UsersRepository {
     return prisma.user.findUnique({
       where: {
         username
+      },
+      include: {
+        Collection: true
       }
     })
   }
 
-
-  create(user: CreateUser): Promise<User> {
-    return prisma.user.create({
+  async create(user: CreateUser): Promise<User> {
+    const userCreated = await prisma.user.create({
       data: user,
     })
-  }
 
+    await prisma.collection.create({
+      data: {
+        userId: userCreated.id
+      }
+    })
+
+    return userCreated
+  }
 
   findById(id: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: {
         id
+      },
+      include: {
+        Collection: true
       }
     })
   }

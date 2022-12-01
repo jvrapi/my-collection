@@ -39,7 +39,7 @@ scalar DateTime
 type Mutation {
   addCard(data: AddCardInput!): Card!
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
-  createUser(data: CreateUserInput!): User!
+  createUser(data: CreateUserInput!): UserCreated!
   updateCards(data: [UpdateCardsInput!]!): [Card!]!
   updateUser(data: UpdateUserInput!): User!
 }
@@ -67,4 +67,8 @@ type User {
   name: String!
   updatedAt: DateTime!
   username: String!
+}
+
+type UserCreated {
+  id: String!
 }
