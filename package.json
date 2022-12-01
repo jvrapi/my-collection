@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsnd  --respawn --transpile-only --ignore-watch node_modules src/index.ts",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "test:e2e": "jest --config jest-e2e.config.ts --detectOpenHandles",
+    "test:e2e": "jest --config jest-e2e.config.ts --detectOpenHandles --forceExit",
     "test:unit": "jest --config jest-unit.config.ts"
   },
   "dependencies": {
