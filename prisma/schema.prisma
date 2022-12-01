@@ -12,26 +12,38 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  username  String   @unique
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @map("updated_at")
-  Card      Card[]
+  id         String      @id @default(uuid())
+  name       String
+  username   String      @unique
+  email      String      @unique
+  password   String
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @default(now()) @map("updated_at")
+  Collection Collection?
 
   @@map("users")
 }
 
 model Card {
-  scryfallId String   @map("scryfall_id")
-  userId     String   @map("user_id")
-  quantity   Int
-  addedAt    DateTime @default(now()) @map("added_at")
-  updatedAt  DateTime @default(now()) @map("updated_at")
-  user       User     @relation(fields: [userId], references: [id])
+  scryfallId   String     @map("scryfall_id")
+  quantity     Int
+  addedAt      DateTime   @default(now()) @map("added_at")
+  updatedAt    DateTime   @default(now()) @map("updated_at")
+  collectionId String     @map("collection_id")
+  collection   Collection @relation(fields: [collectionId], references: [id])
 
-  @@id([scryfallId, userId])
+  @@id([scryfallId, collectionId])
   @@map("cards")
+}
+
+model Collection {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  isShared  Boolean  @default(false) @map("is_shared")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+  Card      Card[]
+
+  @@map("collections")
 }
