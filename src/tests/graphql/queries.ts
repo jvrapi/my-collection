@@ -12,3 +12,22 @@ export const getUsersQuery = gql`
     }
   }
 `
+
+export const getUserCardsQuery = gql`
+  query getUserCards{
+    user{
+      id,
+      name,
+      username,
+      email,
+      createdAt
+      updatedAt,
+      cards {
+        id,
+        addedAt,
+        imageUrl,
+        quantity
+      }
+    }
+  }
+`

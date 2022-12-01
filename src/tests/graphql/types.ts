@@ -15,7 +15,9 @@ export interface UserAuthenticated{
 }
 
 export interface User {
-  user: UserModel
+  user: UserModel & {
+    cards: CardModel[]
+  }
 }
 
 export interface CardAdded {

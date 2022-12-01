@@ -2,6 +2,7 @@ import { Card } from "@prisma/client";
 import { AddCard, CardsRepository, FindByCardIdAndUserId } from "./cards-repository";
 
 export class InMemoryCardsRepository implements CardsRepository {
+  
   private cards: Card[] = []
   
   async addCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
@@ -18,18 +19,22 @@ export class InMemoryCardsRepository implements CardsRepository {
     return card
   }
 
-  async findByCardIdAndUserId({ scryfallCardId, userId }: FindByCardIdAndUserId): Promise<Card | null> {
-    const card = this.cards.find(card => card.scryfallId === scryfallCardId && card.userId === userId) || null
-
-    return card
-  }
-
   async saveCard({ userId, scryfallCardId, quantity }: AddCard): Promise<Card> {
     const cardIndex = this.cards.findIndex(card => card.userId === userId && card.scryfallId === scryfallCardId)
 
     this.cards[cardIndex].quantity = quantity
 
     return this.cards[cardIndex]
+  }
+
+  async findByCardIdAndUserId({ scryfallCardId, userId }: FindByCardIdAndUserId): Promise<Card | null> {
+    const card = this.cards.find(card => card.scryfallId === scryfallCardId && card.userId === userId) || null
+
+    return card
+  }
+
+  async findCardsByUserId(userId: string): Promise<Card[]> {
+    return this.cards.filter(card => card.userId === userId)
   }
 
 }

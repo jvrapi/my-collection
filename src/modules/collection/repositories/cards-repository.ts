@@ -16,5 +16,6 @@ export interface FindByCardIdAndUserId {
 export interface CardsRepository {
   addCard({userId, scryfallCardId, quantity}: AddCard): Promise<Card>
   findByCardIdAndUserId({scryfallCardId, userId}: FindByCardIdAndUserId): Promise<Card | null>
+  findCardsByUserId(userId: string): Promise<Card[]>
   saveCard({userId, scryfallCardId, quantity}: SaveCard): Promise<Card>
 }
