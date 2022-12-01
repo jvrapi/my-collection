@@ -6,7 +6,7 @@ import { Card } from "../dtos/models/card-model";
 import { User } from "../dtos/models/users-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
 import { EnsureRegistered } from "../middlewares/ensure-registered";
-import { GetCardsUseCase } from "../modules/collection/use-cases/get-cards/get-cards-use-case";
+import { GetCollectionUseUCase } from "../modules/collection/use-cases/get-collection/get-collection-use-case";
 import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
 import { GetUserUseCase } from "../modules/users/use-cases/get-user/get-user-use-case";
 import { UpdateUserUseCase } from "../modules/users/use-cases/update-user/update-user-use-case";
@@ -26,7 +26,7 @@ export class UserResolver {
     private getUserUseCase: GetUserUseCase,
 
     @Inject()
-    private getCardsUseCase: GetCardsUseCase
+    private getCollectionUseCase: GetCollectionUseUCase
   ){}
 
   @Query(() => User)
@@ -37,7 +37,7 @@ export class UserResolver {
 
   @FieldResolver(() => [Card])
   async cards(@Root() user: User){
-    return await this.getCardsUseCase.execute(user.id)
+    return await this.getCollectionUseCase.execute(user.id)
   }
 
   @Mutation(()=> User)

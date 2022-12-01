@@ -3,7 +3,7 @@ import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repo
 import { CardsRepository } from "../../repositories/cards-repository";
 
 @Service()
-export class GetCardsUseCase{
+export class GetCollectionUseUCase{
 
   
   constructor(
