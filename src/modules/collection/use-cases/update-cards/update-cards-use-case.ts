@@ -1,7 +1,8 @@
 import { Inject, Service } from "typedi";
 import { ApiError } from "../../../../errors/Error";
+import { CardsRepository } from "../../../cards/repository/cards-repository";
 import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository";
-import { CardsRepository } from "../../repositories/cards-repository";
+import { CollectionsRepository } from "../../repositories/collections-repository";
 
 interface Card {
   cardId: string,
@@ -16,10 +17,14 @@ interface UpdateCards {
 @Service()
 export class UpdateCardsUseCase {
   constructor(
-    @Inject('cardsRepository')
+    @Inject('CardsRepository')
     private cardsRepository: CardsRepository,
-    @Inject('scryfallRepository')
-    private scryfallRepository: ScryfallRepository
+
+    @Inject('ScryfallRepository')
+    private scryfallRepository: ScryfallRepository,
+
+    @Inject('CollectionsRepository')
+    private collectionsRepository: CollectionsRepository
   ){}
 
   async execute({userId, cards}: UpdateCards){
@@ -27,9 +32,11 @@ export class UpdateCardsUseCase {
       throw new ApiError('You need to provide at least an card to be updated')
     }
 
+    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId)
+
     for await (const card of cards){
-      const cardInCollection = await this.cardsRepository.findByCardIdAndUserId({
-        userId,
+      const cardInCollection = await this.cardsRepository.findByCardIdAndCollectionId({
+        collectionId: userCollection!.id,
         scryfallCardId: card.cardId
       })
 
@@ -39,12 +46,13 @@ export class UpdateCardsUseCase {
     }
 
     const cardsUpdated = await Promise.all(cards.map(async ({cardId, quantity}) => {
-      const card = await this.cardsRepository.saveCard({quantity,scryfallCardId: cardId, userId})
+      const card = await this.cardsRepository.saveCard({quantity,scryfallCardId: cardId,  collectionId: userCollection!.id})
       const scryfallCard = await this.scryfallRepository.findCardById(cardId)
       return {
         id: card.scryfallId,
         quantity: card.quantity,
         addedAt: card.addedAt,
+        updatedAt: card.updatedAt,
         imageUrl: scryfallCard?.imageUrl
       } 
     }))

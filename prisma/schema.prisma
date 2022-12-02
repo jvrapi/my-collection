@@ -30,7 +30,7 @@ model Card {
   addedAt      DateTime   @default(now()) @map("added_at")
   updatedAt    DateTime   @default(now()) @map("updated_at")
   collectionId String     @map("collection_id")
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([scryfallId, collectionId])
   @@map("cards")
@@ -42,8 +42,8 @@ model Collection {
   isShared  Boolean  @default(false) @map("is_shared")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id])
-  Card      Card[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  card      Card[]
 
   @@map("collections")
 }

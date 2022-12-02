@@ -1,22 +1,29 @@
 import { Inject, Service } from "typedi";
 import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository";
-import { CardsRepository } from "../../repositories/cards-repository";
+import { CollectionsRepository } from "../../repositories/collections-repository";
 
 @Service()
-export class GetCollectionUseUCase{
+export class GetCollectionUseCase{
 
   
   constructor(
-    @Inject('cardsRepository')
-    private cardsRepository: CardsRepository,
-    @Inject('scryfallRepository')
+    @Inject('CollectionsRepository')
+    private collectionsRepository: CollectionsRepository,
+
+    @Inject('ScryfallRepository')
     private scryfallRepository: ScryfallRepository
   ){}
 
   async execute(userId: string){
-    const cards = await this.cardsRepository.findCardsByUserId(userId)
+    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId)
 
-    const cardsFormatted = await Promise.all(cards.map(async (card) => {
+
+    if(userCollection?.card?.length === 0){
+      return []
+    }
+
+
+    const cards = Promise.all(userCollection!.card!.map(async (card) => {
       const scryfallCard = await this.scryfallRepository.findCardById(card.scryfallId)
       return {
         id: card.scryfallId,
@@ -27,6 +34,7 @@ export class GetCollectionUseUCase{
       }
     }))
 
-    return cardsFormatted
+
+    return cards
   }  
 }

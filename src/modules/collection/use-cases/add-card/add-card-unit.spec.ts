@@ -1,18 +1,18 @@
 import { randomUUID } from "node:crypto"
 import { userData } from "../../../../tests/mocks/user"
+import { InMemoryCardsRepository } from "../../../cards/repository/in-memory-collections-repository"
 import { InMemoryScryfallRepository } from "../../../scryfall/repositories/in-memory-scryfall-repository"
-import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository"
 import { InMemoryUsersRepository } from "../../../users/repositories/in-memory-users-repository"
-import { UsersRepository } from "../../../users/repositories/users-repository"
-import { CardsRepository } from "../../repositories/cards-repository"
-import { InMemoryCardsRepository } from "../../repositories/in-memory-cards-repository"
+import { InMemoryCollectionsRepository } from "../../repositories/in-memory-collections-repository"
 import { AddCardToCollectionUseCase } from "./add-card-use-case"
 
 describe('[unit] Add card to collection', () => {
-  let cardsRepository: CardsRepository
-  let usersRepository: UsersRepository
+  let cardsRepository: InMemoryCardsRepository
+  let usersRepository: InMemoryUsersRepository
+  let scryfallRepository: InMemoryScryfallRepository
+  let collectionsRepository: InMemoryCollectionsRepository
   let addCardToCollectionUseCase: AddCardToCollectionUseCase
-  let scryfallRepository: ScryfallRepository
+  
   const scryfallCard = {
     id: randomUUID(),
     imageUrl: ''
@@ -22,7 +22,8 @@ describe('[unit] Add card to collection', () => {
     cardsRepository = new InMemoryCardsRepository()
     usersRepository = new InMemoryUsersRepository()
     scryfallRepository = new InMemoryScryfallRepository(scryfallCard)
-    addCardToCollectionUseCase = new AddCardToCollectionUseCase(cardsRepository,  scryfallRepository)
+    collectionsRepository = new InMemoryCollectionsRepository(cardsRepository)
+    addCardToCollectionUseCase = new AddCardToCollectionUseCase(collectionsRepository, cardsRepository,  scryfallRepository)
   })
 
 
@@ -30,7 +31,7 @@ describe('[unit] Add card to collection', () => {
     const addCardSpy = jest.spyOn(cardsRepository, 'addCard')
     const findCardByIdSpy = jest.spyOn(scryfallRepository, 'findCardById')
     const user = await usersRepository.create(userData)
-    
+    await collectionsRepository.create(user.id)
     
     const card = await addCardToCollectionUseCase.execute({
       scryfallCardId: scryfallCard.id,
@@ -73,13 +74,12 @@ describe('[unit] Add card to collection', () => {
     expect(findCardByIdSpy).not.toHaveBeenCalled()
   })
 
-  
-
   it('should not be able to add card to collection with invalid card', async () => {
     const addCardSpy = jest.spyOn(cardsRepository, 'addCard')
     const findCardByIdSpy = jest.spyOn(scryfallRepository, 'findCardById')
 
     const user = await usersRepository.create(userData)
+    await collectionsRepository.create(user.id)
     
     
     await expect(addCardToCollectionUseCase.execute({
@@ -95,9 +95,10 @@ describe('[unit] Add card to collection', () => {
   it('should not be able to add an card to collection if his already in collection', async () => {
     const addCardSpy = jest.spyOn(cardsRepository, 'addCard')
     const findCardByIdSpy = jest.spyOn(scryfallRepository, 'findCardById')
-    const findCardByUserIdAndCardId = jest.spyOn(cardsRepository, 'findByCardIdAndUserId')
+    const findByCardIdAndCollectionId = jest.spyOn(cardsRepository, 'findByCardIdAndCollectionId')
     
     const user = await usersRepository.create(userData)
+    await collectionsRepository.create(user.id)
     
     await addCardToCollectionUseCase.execute({
       scryfallCardId: scryfallCard.id,
@@ -112,7 +113,7 @@ describe('[unit] Add card to collection', () => {
     })).rejects.toThrow('This card already in your collection')
 
     expect(findCardByIdSpy).toHaveBeenCalled()
-    expect(findCardByUserIdAndCardId).toHaveBeenCalled()
+    expect(findByCardIdAndCollectionId).toHaveBeenCalled()
     expect(addCardSpy).toHaveBeenCalledTimes(1)
 
   })

@@ -24,28 +24,6 @@ describe('[e2e] Get cards', () => {
     const {server, url}= await createApolloServer()
     testServer = server
     serverUrl = url
-    
-    await request(serverUrl)
-    .mutate(createUserQuery)
-    .variables({data: userData})
-
-    const addCardData = {
-      quantity: 1,
-      cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
-    }
-
-    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
-    .mutate(authenticateUserQuery)
-    .variables({data: authenticateData})
-
-    token = authenticateUserResponse.data?.authenticateUser?.token as string
-
-
-    await request(serverUrl)
-    .mutate(addCardQuery)
-    .variables({data: addCardData})
-    .set('authorization', `Bearer ${token}`)
-    
   })
 
   afterAll(async () => {
@@ -105,13 +83,65 @@ describe('[e2e] Get cards', () => {
   })
 
   it('should be able to get user collection cards', async () => {
+    await request(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: userData})
+
+    const addCardData = {
+      quantity: 1,
+      cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c'
+    }
+
+    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
+
+    token = authenticateUserResponse.data?.authenticateUser?.token as string
+
+
+    await request(serverUrl)
+    .mutate(addCardQuery)
+    .variables({data: addCardData})
+    .set('authorization', `Bearer ${token}`)
+    
+    
     const getUserCardsResponse = await request<User>(serverUrl)
     .query(getUserCardsQuery)
     .set('Authorization', `Bearer ${token}`)
 
     expect(getUserCardsResponse.data?.user.cards).toHaveLength(1)
 
+  })
 
+  it('should be able to get user collection with no cards', async () => {
+    const user = {
+      name: 'Jerry Dean',
+      email: 'fa@istuhibo.lv',
+      username: 'iBQhSDlUZB',
+      password: '3LVWQG986G'
+    }
+
+    const authenticateData = {
+      username: user.email,
+      password: user.password
+    }
+    
+     await request(serverUrl)
+    .mutate(createUserQuery)
+    .variables({data: user})
+    
+    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+    .mutate(authenticateUserQuery)
+    .variables({data: authenticateData})
+
+    token = authenticateUserResponse.data?.authenticateUser?.token as string
+
+    const getUserCardsResponse = await request<User>(serverUrl)
+    .query(getUserCardsQuery)
+    .set('Authorization', `Bearer ${token}`)
+
+
+    expect(getUserCardsResponse.data?.user.cards).toHaveLength(0)
   })
 
 })

@@ -13,6 +13,9 @@ export class Card {
   addedAt: Date
 
   @Field()
+  updatedAt: Date
+
+  @Field()
   quantity: number
   
 }

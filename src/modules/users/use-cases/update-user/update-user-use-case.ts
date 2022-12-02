@@ -11,7 +11,7 @@ interface UpdateUserUseCaseRequest extends UpdateUserInput{
 @Service()
 export class UpdateUserUseCase{
   constructor(
-    @Inject('usersRepository')
+    @Inject('UsersRepository')
     private usersRepository: UsersRepository
 
   ){}

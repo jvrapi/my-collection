@@ -7,7 +7,7 @@ import { UserCreated } from "../dtos/models/user-created-model";
 import { User } from "../dtos/models/users-model";
 import { EnsureAuthenticated } from "../middlewares/ensure-authenticated";
 import { EnsureRegistered } from "../middlewares/ensure-registered";
-import { GetCollectionUseUCase } from "../modules/collection/use-cases/get-collection/get-collection-use-case";
+import { GetCollectionUseCase } from "../modules/collection/use-cases/get-collection/get-collection-use-case";
 import { CreateUserUseCase } from "../modules/users/use-cases/create-user/create-user-use-case";
 import { GetUserUseCase } from "../modules/users/use-cases/get-user/get-user-use-case";
 import { UpdateUserUseCase } from "../modules/users/use-cases/update-user/update-user-use-case";
@@ -27,7 +27,7 @@ export class UserResolver {
     private getUserUseCase: GetUserUseCase,
 
     @Inject()
-    private getCollectionUseCase: GetCollectionUseUCase
+    private getCollectionUseCase: GetCollectionUseCase
   ){}
 
   @Query(() => User)

@@ -1,14 +1,14 @@
 import { randomUUID } from "node:crypto"
+import { InMemoryCardsRepository } from "../../../cards/repository/in-memory-collections-repository"
 import { InMemoryScryfallRepository } from "../../../scryfall/repositories/in-memory-scryfall-repository"
-import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository"
-import { CardsRepository } from "../../repositories/cards-repository"
-import { InMemoryCardsRepository } from "../../repositories/in-memory-cards-repository"
-import { GetCardsUseCase } from "./get-cards-use-case"
+import { InMemoryCollectionsRepository } from "../../repositories/in-memory-collections-repository"
+import { GetCollectionUseCase } from "./get-collection-use-case"
 
-describe('[unit] Get cards', () => {
-  let cardsRepository: CardsRepository
-  let scryfallRepository: ScryfallRepository
-  let getCardsUseCase: GetCardsUseCase
+describe('[unit] Get collection', () => {
+  let collectionsRepository: InMemoryCollectionsRepository
+  let cardsRepository: InMemoryCardsRepository
+  let scryfallRepository: InMemoryScryfallRepository
+  let getCollectionUseCase: GetCollectionUseCase
 
   const scryfallCard = {
     id: randomUUID(),
@@ -17,20 +17,35 @@ describe('[unit] Get cards', () => {
 
   beforeEach(() => {
     cardsRepository = new InMemoryCardsRepository()
+    collectionsRepository = new InMemoryCollectionsRepository(cardsRepository)
     scryfallRepository = new InMemoryScryfallRepository(scryfallCard)
-    getCardsUseCase = new GetCardsUseCase(cardsRepository, scryfallRepository)
+    getCollectionUseCase = new GetCollectionUseCase(collectionsRepository, scryfallRepository)
   })
 
   it('should be able to list user cards', async () => {
+    
     const userId =  randomUUID() 
-    const card = await cardsRepository.addCard({
+    
+    const {id: collectionId} = await collectionsRepository.create(userId)
+    
+    await cardsRepository.addCard({
       quantity: 1,
       scryfallCardId: scryfallCard.id,
-      userId
+      collectionId 
     })
-    const userCards = await getCardsUseCase.execute(userId)
+    
+    const userCards = await getCollectionUseCase.execute(userId)
     
     expect(userCards.length).toBe(1)
-    expect(userCards.shift()).toMatchObject(card)
+  })
+
+  it('should be able to get user collection with no cards', async () => {
+    const userId =  randomUUID() 
+    
+    await collectionsRepository.create(userId)
+    
+    const userCards = await getCollectionUseCase.execute(userId)
+    
+    expect(userCards).toHaveLength(0)
   })
 })

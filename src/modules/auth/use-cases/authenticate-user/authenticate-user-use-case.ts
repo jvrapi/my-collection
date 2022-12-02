@@ -13,13 +13,13 @@ interface AuthenticateUserUseCaseRequest {
 @Service()
 export class AuthenticateUserUseCase{
   constructor(
-      @Inject('usersRepository')
+      @Inject('UsersRepository')
       private usersRepository: UsersRepository,
       
-      @Inject('bcryptProvider')
+      @Inject('BcryptProvider')
       private passwordProvider: PasswordProvider,
       
-      @Inject('jwtTokenProvider')
+      @Inject('JwtTokenProvider')
       private tokenProvider: TokenProvider
   ){}
 

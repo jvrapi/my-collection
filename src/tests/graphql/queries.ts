@@ -24,9 +24,10 @@ export const getUserCardsQuery = gql`
       updatedAt,
       cards {
         id,
-        addedAt,
         imageUrl,
-        quantity
+        quantity,
+        addedAt,
+        updatedAt
       }
     }
   }

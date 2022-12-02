@@ -36,8 +36,9 @@ export const addCardQuery = gql`
     addCard(data: $data) {
       id,
       imageUrl,
+      quantity,
       addedAt,
-      quantity
+      updatedAt
     }
   }
 `

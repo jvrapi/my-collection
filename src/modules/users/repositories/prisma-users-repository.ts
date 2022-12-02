@@ -26,18 +26,10 @@ export class PrismaUsersRepository implements UsersRepository {
     })
   }
 
-  async create(user: CreateUser): Promise<User> {
-    const userCreated = await prisma.user.create({
+   create(user: CreateUser): Promise<User> {
+    return prisma.user.create({
       data: user,
     })
-
-    await prisma.collection.create({
-      data: {
-        userId: userCreated.id
-      }
-    })
-
-    return userCreated
   }
 
   findById(id: string): Promise<User | null> {

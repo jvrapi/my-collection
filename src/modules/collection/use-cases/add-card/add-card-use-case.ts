@@ -1,15 +1,26 @@
 import { Inject, Service } from "typedi";
 import { ApiError } from "../../../../errors/Error";
+import { CardsRepository } from "../../../cards/repository/cards-repository";
 import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository";
-import { AddCard, CardsRepository } from "../../repositories/cards-repository";
+import { CollectionsRepository } from "../../repositories/collections-repository";
+
+interface AddCard{
+  quantity: number
+  scryfallCardId: string
+  userId: string
+}
 
 @Service()
 export class AddCardToCollectionUseCase{
   constructor(
-    @Inject('cardsRepository')
+    @Inject('CollectionsRepository')
+    private collectionsRepository: CollectionsRepository,
+
+    @Inject('CardsRepository')
     private cardsRepository: CardsRepository,
    
-    @Inject('scryfallRepository')
+   
+    @Inject('ScryfallRepository')
     private scryfallRepository: ScryfallRepository
   ){}
 
@@ -30,9 +41,12 @@ export class AddCardToCollectionUseCase{
       throw new ApiError('Invalid card')
     }
 
-    const cardAlreadyInCollection = await this.cardsRepository.findByCardIdAndUserId({
+    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId)
+
+
+    const cardAlreadyInCollection = await this.cardsRepository.findByCardIdAndCollectionId({
       scryfallCardId,
-      userId
+      collectionId: userCollection!.id
     })
 
     if(cardAlreadyInCollection){
@@ -42,14 +56,15 @@ export class AddCardToCollectionUseCase{
     const card = await this.cardsRepository.addCard({
       quantity,
       scryfallCardId,
-      userId
+      collectionId: userCollection!.id
     })
 
     return {
       id: card.scryfallId,
       imageUrl: scryfallCard.imageUrl,
+      quantity: card.quantity,
       addedAt: card.addedAt,
-      quantity: card.quantity
+      updatedAt: card.updatedAt,
     }
   }
 }

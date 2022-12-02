@@ -1,6 +1,8 @@
 import { BcryptPasswordProvider } from "../../../../providers/password/bcrypt-password-provider"
 import { PasswordProvider } from "../../../../providers/password/password-provider"
 import { userData } from "../../../../tests/mocks/user"
+import { CollectionsRepository } from "../../../collection/repositories/collections-repository"
+import { InMemoryCollectionsRepository } from "../../../collection/repositories/in-memory-collections-repository"
 import { InMemoryUsersRepository } from "../../repositories/in-memory-users-repository"
 import { UsersRepository } from "../../repositories/users-repository"
 import { CreateUserUseCase } from "./create-user-use-case"
@@ -11,12 +13,14 @@ jest.useFakeTimers()
 describe('[unit] Create user', () => {
   let createUserUseCase: CreateUserUseCase
   let usersRepository: UsersRepository
+  let collectionsRepository: CollectionsRepository
   let passwordProvider: PasswordProvider
   
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository()
+    collectionsRepository = new InMemoryCollectionsRepository()
     passwordProvider = new BcryptPasswordProvider()
-    createUserUseCase = new CreateUserUseCase(usersRepository, passwordProvider)
+    createUserUseCase = new CreateUserUseCase(usersRepository, collectionsRepository, passwordProvider)
   })
   
   it('should be able to create a new user', async () => {
