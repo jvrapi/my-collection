@@ -1,10 +1,10 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from 'type-graphql';
 
 @InputType()
-export class UpdateCardsInput{
+export class UpdateCardsInput {
   @Field()
-  cardId: string
+    cardId: string;
 
   @Field()
-  quantity: number
+    quantity: number;
 }

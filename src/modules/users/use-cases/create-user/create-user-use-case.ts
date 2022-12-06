@@ -5,9 +5,8 @@ import { PasswordProvider } from '../../../../providers/password/password-provid
 import { CollectionsRepository } from '../../../collection/repositories/collections-repository';
 import { UsersRepository } from '../../repositories/users-repository';
 
-
 @Service()
-export class CreateUserUseCase{
+export class CreateUserUseCase {
   constructor(
     @Inject('UsersRepository')
     private usersRepository: UsersRepository,
@@ -17,34 +16,35 @@ export class CreateUserUseCase{
 
     @Inject('BcryptProvider')
     private passwordProvider: PasswordProvider,
-  ){}
-    
-  async execute({name,email,password,username}: CreateUserInput){
+  ) {}
 
-    const emailAlreadyInUse = await this.usersRepository.findByEmail(email)
-    const usernameAlreadyInUse = await this.usersRepository.findByUsername(username)
+  async execute({
+    name, email, password, username,
+  }: CreateUserInput) {
+    const emailAlreadyInUse = await this.usersRepository.findByEmail(email);
+    const usernameAlreadyInUse = await this.usersRepository.findByUsername(username);
 
-    if(emailAlreadyInUse){
-      throw new ApiError('E-mail already in use')
+    if (emailAlreadyInUse) {
+      throw new ApiError('E-mail already in use');
     }
 
-    if(usernameAlreadyInUse){
-      throw new ApiError('Username already in use')
+    if (usernameAlreadyInUse) {
+      throw new ApiError('Username already in use');
     }
-    
-    const passwordHashed = await this.passwordProvider.hashPassword(password)
-    
-    const userCreated= await this.usersRepository.create({
+
+    const passwordHashed = await this.passwordProvider.hashPassword(password);
+
+    const userCreated = await this.usersRepository.create({
       email,
       name,
       password: passwordHashed,
-      username
-    })
-    
-    await this.collectionsRepository.create(userCreated.id)
+      username,
+    });
+
+    await this.collectionsRepository.create(userCreated.id);
 
     return {
-      id: userCreated.id
-    }
+      id: userCreated.id,
+    };
   }
 }

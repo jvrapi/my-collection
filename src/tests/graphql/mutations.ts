@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const createUserQuery = gql`
   mutation CreateUser($data: CreateUserInput!) {
@@ -6,9 +6,7 @@ export const createUserQuery = gql`
       id
     }
   }
-`
- 
-
+`;
 
 export const authenticateUserQuery = gql`
   mutation AuthenticateUser($data: AuthenticateUserInput!) {
@@ -16,7 +14,7 @@ export const authenticateUserQuery = gql`
       token
     }
   }
-`
+`;
 
 export const updateUserQuery = gql`
   mutation UpdateUser($data: UpdateUserInput!) {
@@ -29,7 +27,7 @@ export const updateUserQuery = gql`
       updatedAt
     }
   }
-`
+`;
 
 export const addCardQuery = gql`
   mutation AddCard($data: AddCardInput!) {
@@ -41,7 +39,7 @@ export const addCardQuery = gql`
       updatedAt
     }
   }
-`
+`;
 
 export const updateCardsQuery = gql`
   mutation UpdateCards($data: [UpdateCardsInput!]!) {
@@ -52,5 +50,4 @@ export const updateCardsQuery = gql`
       quantity
     }
   }
-`
-
+`;

@@ -1,3 +1,3 @@
-import { createApolloServer } from "./server";
+import { createApolloServer } from './server';
 
-createApolloServer()
+createApolloServer();

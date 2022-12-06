@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 export const getUsersQuery = gql`
   query GetUsers {
@@ -11,7 +11,7 @@ export const getUsersQuery = gql`
       updatedAt,
     }
   }
-`
+`;
 
 export const getUserCardsQuery = gql`
   query getUserCards{
@@ -31,4 +31,15 @@ export const getUserCardsQuery = gql`
       }
     }
   }
-`
+`;
+
+export const getCardsQuery = gql`
+  query Cards($data: GetCardsFilters!){
+    cards(data: $data) {
+      id,
+      imageUrl,
+      name
+    }
+  }
+
+`;

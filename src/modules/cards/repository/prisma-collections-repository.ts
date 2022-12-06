@@ -1,18 +1,19 @@
-import { Card } from "@prisma/client";
-import { prisma } from "../../../database/prisma";
-import { AddCard, CardsRepository, FindByCardIdAndCollectionId, SaveCard } from "./cards-repository";
+import { Card } from '@prisma/client';
+import { prisma } from '../../../database/prisma';
+import {
+  AddCard, CardsRepository, FindByCardIdAndCollectionId, SaveCard,
+} from './cards-repository';
 
-export class PrismaCardsRepository implements CardsRepository{
-  
+export class PrismaCardsRepository implements CardsRepository {
   findByCardIdAndCollectionId({ scryfallCardId, collectionId }: FindByCardIdAndCollectionId): Promise<Card | null> {
     return prisma.card.findUnique({
       where: {
         scryfallId_collectionId: {
           collectionId,
-          scryfallId: scryfallCardId
-        }
-      }
-    })
+          scryfallId: scryfallCardId,
+        },
+      },
+    });
   }
 
   addCard({ collectionId, scryfallCardId, quantity }: AddCard): Promise<Card> {
@@ -20,9 +21,9 @@ export class PrismaCardsRepository implements CardsRepository{
       data: {
         collectionId,
         scryfallId: scryfallCardId,
-        quantity 
-      }
-    })
+        quantity,
+      },
+    });
   }
 
   saveCard({ collectionId, scryfallCardId, quantity }: SaveCard): Promise<Card> {
@@ -30,14 +31,13 @@ export class PrismaCardsRepository implements CardsRepository{
       where: {
         scryfallId_collectionId: {
           scryfallId: scryfallCardId,
-          collectionId
-        }
+          collectionId,
+        },
       },
       data: {
         quantity,
-        updatedAt: new Date()
-      }
-    })
+        updatedAt: new Date(),
+      },
+    });
   }
-
 }

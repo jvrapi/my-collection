@@ -1,21 +1,22 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 export class Card {
-  
   @Field()
-  id: string
-  
-  @Field()
-  imageUrl: string
+    id: string;
 
   @Field()
-  addedAt: Date
+    imageUrl: string;
 
   @Field()
-  updatedAt: Date
+    addedAt: Date;
 
   @Field()
-  quantity: number
-  
+    updatedAt: Date;
+
+  @Field()
+    quantity: number;
+
+  @Field()
+    name: string;
 }

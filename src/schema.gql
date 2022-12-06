@@ -21,6 +21,7 @@ type Card {
   addedAt: DateTime!
   id: String!
   imageUrl: String!
+  name: String!
   quantity: Float!
   updatedAt: DateTime!
 }
@@ -37,6 +38,10 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+input GetCardsFilters {
+  name: String!
+}
+
 type Mutation {
   addCard(data: AddCardInput!): Card!
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
@@ -46,7 +51,14 @@ type Mutation {
 }
 
 type Query {
+  cards(data: GetCardsFilters!): [ScryfallCardModel!]!
   user: User!
+}
+
+type ScryfallCardModel {
+  id: String!
+  imageUrl: String!
+  name: String!
 }
 
 input UpdateCardsInput {

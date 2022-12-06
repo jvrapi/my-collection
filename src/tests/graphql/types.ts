@@ -1,5 +1,7 @@
-import { Card as CardModel } from "../../dtos/models/card-model";
-import { User as UserModel } from "../../dtos/models/users-model";
+import { Card as CardModel } from '../../dtos/models/card-model';
+import { ScryfallCardModel } from '../../dtos/models/scryfall-card-model';
+import { User as UserModel } from '../../dtos/models/users-model';
+
 export interface UserCreated {
   createUser: UserModel
 }
@@ -8,7 +10,7 @@ export interface UserUpdated {
   updateUser: UserModel
 }
 
-export interface UserAuthenticated{
+export interface UserAuthenticated {
   authenticateUser: {
     token: string
   }
@@ -26,4 +28,8 @@ export interface CardAdded {
 
 export interface CardUpdated {
   updateCards: CardModel[]
+}
+
+export interface ScryfallCards {
+  cards: ScryfallCardModel[]
 }

@@ -1,62 +1,60 @@
-import { User } from "@prisma/client";
-import { prisma } from "../../../database/prisma";
-import { CreateUser, UpdateUser, UsersRepository } from "./users-repository";
+import { User } from '@prisma/client';
+import { prisma } from '../../../database/prisma';
+import { CreateUser, UpdateUser, UsersRepository } from './users-repository';
 
 export class PrismaUsersRepository implements UsersRepository {
-   
   findByEmail(email: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: {
-        email
+        email,
       },
       include: {
-        Collection: true
-      }
-    })
+        Collection: true,
+      },
+    });
   }
 
   findByUsername(username: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: {
-        username
+        username,
       },
       include: {
-        Collection: true
-      }
-    })
+        Collection: true,
+      },
+    });
   }
 
-   create(user: CreateUser): Promise<User> {
+  create(user: CreateUser): Promise<User> {
     return prisma.user.create({
       data: user,
-    })
+    });
   }
 
   findById(id: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: {
-        id
+        id,
       },
       include: {
-        Collection: true
-      }
-    })
+        Collection: true,
+      },
+    });
   }
 
-  save({id,email,name,username}: UpdateUser): Promise<User> {
+  save({
+    id, email, name, username,
+  }: UpdateUser): Promise<User> {
     return prisma.user.update({
-      where:{
-        id
+      where: {
+        id,
       },
       data: {
         email,
         name,
         username,
-        updatedAt: new Date()
-      }
-    })
+        updatedAt: new Date(),
+      },
+    });
   }
-
 }
-
-

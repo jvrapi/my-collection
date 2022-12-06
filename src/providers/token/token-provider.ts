@@ -1,4 +1,4 @@
-export interface GenerateToken{
+export interface GenerateToken {
   userId: string
 }
 
@@ -11,6 +11,6 @@ export interface TokenPayload {
 }
 
 export interface TokenProvider {
-  generateToken({userId}: GenerateToken): string
-  checkToken({token}: CheckToken): string
+  generateToken({ userId }: GenerateToken): string
+  checkToken({ token }: CheckToken): string
 }

@@ -8,38 +8,29 @@ import { Container } from 'typedi';
 import './container';
 import { ErrorInterceptor as formatError } from './middlewares/error-interceptor';
 import { AuthResolver } from './resolvers/auth-resolver';
+import { CardResolver } from './resolvers/card-resolver';
 import { CollectionResolver } from './resolvers/collection-resolver';
 import { UserResolver } from './resolvers/user-resolver';
 import { Context } from './types/context';
 
-
-
 export const createApolloServer = async () => {
-
   const schema = await buildSchema({
-    resolvers: [UserResolver, AuthResolver, CollectionResolver],
+    resolvers: [UserResolver, AuthResolver, CollectionResolver, CardResolver],
     emitSchemaFile: resolve(__dirname, './schema.gql'),
     container: Container,
-  })
-
-
-  
+  });
 
   const server = new ApolloServer<Context>({
     schema,
-    formatError
-  })
+    formatError,
+  });
 
-  const {url} = await startStandaloneServer(server, {
-    context: async ({req}) => ({token: req.headers.authorization, user: {id: ''}}),
-    
-  })
+  const { url } = await startStandaloneServer(server, {
+    context: async ({ req }) => ({ token: req.headers.authorization, user: { id: '' } }),
 
-  console.log(`🚀 Server ready on ${url} 🚀`)
+  });
 
-  
-  return {server, url}
-}
+  console.log(`🚀 Server ready on ${url} 🚀`);
 
-
-
+  return { server, url };
+};

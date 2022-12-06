@@ -1,16 +1,13 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType } from 'type-graphql';
 
 @InputType()
 export class UpdateUserInput {
-  
   @Field()
-  username: string
-  
+    username: string;
+
   @Field()
-  name: string
-  
+    name: string;
+
   @Field()
-  email: string
-  
- 
+    email: string;
 }

@@ -1,63 +1,59 @@
-import { Inject, Service } from "typedi";
-import { ApiError } from "../../../../errors/Error";
-import { CardsRepository } from "../../../cards/repository/cards-repository";
-import { ScryfallRepository } from "../../../scryfall/repositories/scryfall-repository";
-import { CollectionsRepository } from "../../repositories/collections-repository";
+import { Inject, Service } from 'typedi';
+import { ApiError } from '../../../../errors/Error';
+import { CardsRepository } from '../../../cards/repository/cards-repository';
+import { ScryfallRepository } from '../../../scryfall/repositories/scryfall-repository';
+import { CollectionsRepository } from '../../repositories/collections-repository';
 
-interface AddCard{
+interface AddCard {
   quantity: number
   scryfallCardId: string
   userId: string
 }
 
 @Service()
-export class AddCardToCollectionUseCase{
+export class AddCardToCollectionUseCase {
   constructor(
     @Inject('CollectionsRepository')
     private collectionsRepository: CollectionsRepository,
 
     @Inject('CardsRepository')
     private cardsRepository: CardsRepository,
-   
-   
+
     @Inject('ScryfallRepository')
-    private scryfallRepository: ScryfallRepository
-  ){}
+    private scryfallRepository: ScryfallRepository,
+  ) {}
 
-  async execute({quantity, scryfallCardId,userId}: AddCard){
-    if(!quantity || quantity === 0){
-      throw new ApiError('You need to provide an quantity')
-    }
-    
-    if(!scryfallCardId){
-      throw new ApiError('You need to provide an card')
-    }
-    
-    
-
-    const scryfallCard = await this.scryfallRepository.findCardById(scryfallCardId)
-
-    if(!scryfallCard){
-      throw new ApiError('Invalid card')
+  async execute({ quantity, scryfallCardId, userId }: AddCard) {
+    if (!quantity || quantity === 0) {
+      throw new ApiError('You need to provide an quantity');
     }
 
-    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId)
+    if (!scryfallCardId) {
+      throw new ApiError('You need to provide an card');
+    }
 
+    const scryfallCard = await this.scryfallRepository.findCardById(scryfallCardId);
+
+    if (!scryfallCard) {
+      throw new ApiError('Invalid card');
+    }
+
+    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId);
 
     const cardAlreadyInCollection = await this.cardsRepository.findByCardIdAndCollectionId({
       scryfallCardId,
-      collectionId: userCollection!.id
-    })
+      collectionId: userCollection!.id,
+    });
 
-    if(cardAlreadyInCollection){
-      throw new ApiError('This card already in your collection')
+    if (cardAlreadyInCollection) {
+      throw new ApiError('This card already in your collection');
     }
 
     const card = await this.cardsRepository.addCard({
       quantity,
       scryfallCardId,
-      collectionId: userCollection!.id
-    })
+      collectionId: userCollection!.id,
+    });
 
     return {
       id: card.scryfallId,
@@ -65,6 +61,6 @@ export class AddCardToCollectionUseCase{
       quantity: card.quantity,
       addedAt: card.addedAt,
       updatedAt: card.updatedAt,
-    }
+    };
   }
 }
