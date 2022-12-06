@@ -1,12 +1,12 @@
 import { EnvironmentContext, JestEnvironmentConfig } from '@jest/environment';
-import { config } from 'dotenv';
+import { config as dotEnvConfig } from 'dotenv';
 import NodeEnvironment from 'jest-environment-node';
 import { createConnection } from 'mysql2/promise';
 import { exec } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
 
-config({ path: '.env.testing' });
+dotEnvConfig({ path: '.env.testing' });
 
 const execSync = promisify(exec);
 

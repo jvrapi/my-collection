@@ -13,7 +13,6 @@ import { Context } from '../../../../types/context';
 describe('[e2e] Get cards', () => {
   let testServer: ApolloServer<Context>;
   let serverUrl: string;
-  let token: string;
 
   const authenticateData = {
     username: userData.email,
@@ -89,7 +88,7 @@ describe('[e2e] Get cards', () => {
       .mutate(authenticateUserQuery)
       .variables({ data: authenticateData });
 
-    token = authenticateUserResponse.data?.authenticateUser?.token as string;
+    const token = authenticateUserResponse.data?.authenticateUser?.token as string;
 
     await request(serverUrl)
       .mutate(addCardQuery)
@@ -111,11 +110,6 @@ describe('[e2e] Get cards', () => {
       password: '3LVWQG986G',
     };
 
-    const authenticateData = {
-      username: user.email,
-      password: user.password,
-    };
-
     await request(serverUrl)
       .mutate(createUserQuery)
       .variables({ data: user });
@@ -124,7 +118,7 @@ describe('[e2e] Get cards', () => {
       .mutate(authenticateUserQuery)
       .variables({ data: authenticateData });
 
-    token = authenticateUserResponse.data?.authenticateUser?.token as string;
+    const token = authenticateUserResponse.data?.authenticateUser?.token as string;
 
     const getUserCardsResponse = await request<User>(serverUrl)
       .query(getUserCardsQuery)

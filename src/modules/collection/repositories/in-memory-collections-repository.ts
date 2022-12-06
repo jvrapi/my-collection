@@ -8,12 +8,14 @@ export class InMemoryCollectionsRepository implements CollectionsRepository {
   constructor(private cardsRepository: InMemoryCardsRepository) {}
 
   async findCollectionByUserId(userId: string): Promise<Collection | null> {
-    const collection = this.collections.find((collection) => collection.userId === userId) || null;
+    const userCollection = this.collections.find(
+      (collection) => collection.userId === userId,
+    ) || null;
 
-    if (collection) {
-      collection.card = await this.cardsRepository.findByCollectionId(collection.id);
+    if (userCollection) {
+      userCollection.card = await this.cardsRepository.findByCollectionId(userCollection.id);
     }
-    return collection;
+    return userCollection;
   }
 
   async create(userId:string):Promise<Collection> {

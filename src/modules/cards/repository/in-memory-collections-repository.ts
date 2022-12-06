@@ -4,10 +4,13 @@ import { AddCard, CardsRepository, FindByCardIdAndCollectionId } from './cards-r
 export class InMemoryCardsRepository implements CardsRepository {
   private cards: Card[] = [];
 
-  async findByCardIdAndCollectionId({ scryfallCardId, collectionId }: FindByCardIdAndCollectionId): Promise<Card | null> {
-    const card = this.cards.find((card) => card.scryfallId === scryfallCardId && card.collectionId === collectionId) || null;
-
-    return card;
+  async findByCardIdAndCollectionId({
+    scryfallCardId,
+    collectionId,
+  }: FindByCardIdAndCollectionId): Promise<Card | null> {
+    return this.cards.find(
+      (card) => card.scryfallId === scryfallCardId && card.collectionId === collectionId,
+    ) || null;
   }
 
   async addCard({ collectionId, scryfallCardId, quantity }: AddCard): Promise<Card> {
@@ -25,7 +28,9 @@ export class InMemoryCardsRepository implements CardsRepository {
   }
 
   async saveCard({ collectionId, scryfallCardId, quantity }: AddCard): Promise<Card> {
-    const cardIndex = this.cards.findIndex((card) => card.collectionId === collectionId && card.scryfallId === scryfallCardId);
+    const cardIndex = this.cards.findIndex(
+      (card) => card.collectionId === collectionId && card.scryfallId === scryfallCardId,
+    );
 
     this.cards[cardIndex].quantity = quantity;
 

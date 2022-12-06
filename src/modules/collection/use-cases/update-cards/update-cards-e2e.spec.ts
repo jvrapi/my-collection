@@ -5,7 +5,10 @@ import request from 'supertest-graphql';
 import { JwtTokenProvider } from '../../../../providers/token/jwt-token-provider';
 import { createApolloServer } from '../../../../server';
 import {
-  addCardQuery, authenticateUserQuery, createUserQuery, updateCardsQuery,
+  addCardQuery,
+  authenticateUserQuery,
+  createUserQuery,
+  updateCardsQuery
 } from '../../../../tests/graphql/mutations';
 import { CardAdded, CardUpdated, UserAuthenticated } from '../../../../tests/graphql/types';
 import { userData } from '../../../../tests/mocks/user';
@@ -55,11 +58,6 @@ describe('[e2e] Update cards', () => {
     const updateCardData = {
       quantity: 1,
       cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c',
-    };
-
-    const authenticateData = {
-      username: userData.email,
-      password: userData.password,
     };
 
     const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)

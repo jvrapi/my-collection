@@ -6,7 +6,7 @@ export class BcryptPasswordProvider implements PasswordProvider {
     return hash(password, 8);
   }
 
-  compare(password: string, hash: string): Promise<boolean> {
-    return compare(password, hash);
+  compare(password: string, passwordEncrypted: string): Promise<boolean> {
+    return compare(password, passwordEncrypted);
   }
 }

@@ -17,7 +17,11 @@ describe('[unit] Authenticate user', () => {
     usersRepository = new InMemoryUsersRepository();
     passwordProvider = new BcryptPasswordProvider();
     tokenProvider = new JwtTokenProvider();
-    authenticateUserUseCase = new AuthenticateUserUseCase(usersRepository, passwordProvider, tokenProvider);
+    authenticateUserUseCase = new AuthenticateUserUseCase(
+      usersRepository,
+      passwordProvider,
+      tokenProvider,
+    );
   });
 
   it('should be able to authenticate a user with email', async () => {

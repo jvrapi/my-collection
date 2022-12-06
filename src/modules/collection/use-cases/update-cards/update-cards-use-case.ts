@@ -34,7 +34,7 @@ export class UpdateCardsUseCase {
 
     const userCollection = await this.collectionsRepository.findCollectionByUserId(userId);
 
-    for await (const card of cards) {
+    await Promise.all(cards.map(async (card) => {
       const cardInCollection = await this.cardsRepository.findByCardIdAndCollectionId({
         collectionId: userCollection!.id,
         scryfallCardId: card.cardId,
@@ -43,10 +43,14 @@ export class UpdateCardsUseCase {
       if (!cardInCollection) {
         throw new ApiError('Some card is not in collection');
       }
-    }
+    }));
 
     const cardsUpdated = await Promise.all(cards.map(async ({ cardId, quantity }) => {
-      const card = await this.cardsRepository.saveCard({ quantity, scryfallCardId: cardId, collectionId: userCollection!.id });
+      const card = await this.cardsRepository.saveCard({
+        quantity,
+        scryfallCardId: cardId,
+        collectionId: userCollection!.id
+      });
       const scryfallCard = await this.scryfallRepository.findCardById(cardId);
       return {
         id: card.scryfallId,

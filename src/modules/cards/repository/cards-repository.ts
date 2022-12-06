@@ -14,7 +14,10 @@ export interface AddCard {
 export type SaveCard = AddCard;
 
 export interface CardsRepository {
-  findByCardIdAndCollectionId({ scryfallCardId, collectionId }: FindByCardIdAndCollectionId): Promise<Card | null>
+  findByCardIdAndCollectionId({
+    scryfallCardId,
+    collectionId,
+  }: FindByCardIdAndCollectionId): Promise<Card | null>
   addCard({ collectionId, scryfallCardId, quantity }: AddCard): Promise<Card>
   saveCard({ collectionId, scryfallCardId, quantity }: SaveCard): Promise<Card>
 }

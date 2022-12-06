@@ -19,7 +19,11 @@ describe('[unit] Add card to collection', () => {
     usersRepository = new InMemoryUsersRepository();
     scryfallRepository = new InMemoryScryfallRepository(scryfallCard);
     collectionsRepository = new InMemoryCollectionsRepository(cardsRepository);
-    addCardToCollectionUseCase = new AddCardToCollectionUseCase(collectionsRepository, cardsRepository, scryfallRepository);
+    addCardToCollectionUseCase = new AddCardToCollectionUseCase(
+      collectionsRepository,
+      cardsRepository,
+      scryfallRepository,
+    );
   });
 
   it('should be able to add card to collection', async () => {
