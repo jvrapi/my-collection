@@ -116,7 +116,12 @@ describe('[e2e] Get cards', () => {
 
     const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
       .mutate(authenticateUserQuery)
-      .variables({ data: authenticateData });
+      .variables({
+        data: {
+          username: user.email,
+          password: user.password,
+        }
+      });
 
     const token = authenticateUserResponse.data?.authenticateUser?.token as string;
 
