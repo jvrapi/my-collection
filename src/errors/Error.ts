@@ -1,11 +1,12 @@
 import { GraphQLError } from 'graphql';
 
-export class ApiError {
+export class ApiError extends GraphQLError {
   constructor(message: string, statusCode = 400) {
-    throw new GraphQLError(message, {
+    super(message, {
       extensions: {
-        code: statusCode.toString(),
+        status: statusCode.toString(),
       },
     });
+    this.extensions.status = statusCode.toString();
   }
 }
