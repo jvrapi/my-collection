@@ -7,7 +7,7 @@ interface GetCardsFilters {
 }
 
 @Service()
-export class GetCardsByNameUseCase {
+export class GetCardsUseCase {
   constructor(
     @Inject('ScryfallRepository')
     private scryfallRepository: ScryfallRepository,
