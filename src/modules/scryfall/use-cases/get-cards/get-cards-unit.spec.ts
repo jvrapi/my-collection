@@ -1,4 +1,4 @@
-import { scryfallCard } from '../../../../tests/mocks/card';
+import { scryfallCard, scryfallSet } from '../../../../tests/mocks/scryfall';
 import { InMemoryScryfallRepository } from '../../repositories/in-memory-scryfall-repository';
 import { GetCardsUseCase } from './get-cards-use-case';
 
@@ -7,7 +7,7 @@ describe('[unit] Get cards by name', () => {
   let getCardsUseCase: GetCardsUseCase;
 
   beforeEach(() => {
-    scryfallRepository = new InMemoryScryfallRepository(scryfallCard);
+    scryfallRepository = new InMemoryScryfallRepository(scryfallCard, scryfallSet);
     getCardsUseCase = new GetCardsUseCase(scryfallRepository);
   });
 

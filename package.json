@@ -8,7 +8,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "test:e2e": "jest --config jest-e2e.config.ts --detectOpenHandles --forceExit",
     "test:unit": "jest --config jest-unit.config.ts",
-    "pretest:e2e": "docker compose start",
+    "pretest:e2e": "docker compose up -d",
     "prepare": "husky install"
   },
   "dependencies": {

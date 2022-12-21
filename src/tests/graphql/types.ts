@@ -1,5 +1,7 @@
 import { Card as CardModel } from '../../dtos/models/card-model';
+import { Pagination } from '../../dtos/models/pagination-model';
 import { ScryfallCardModel } from '../../dtos/models/scryfall-card-model';
+import { Set } from '../../dtos/models/set-model';
 import { User as UserModel } from '../../dtos/models/users-model';
 
 export interface UserCreated {
@@ -32,4 +34,11 @@ export interface CardUpdated {
 
 export interface ScryfallCards {
   cards: ScryfallCardModel[]
+}
+
+export interface SCryfallSets {
+  sets: {
+    items: Set[],
+    pagination: Pagination
+  }
 }

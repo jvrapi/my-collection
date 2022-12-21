@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { scryfallCard } from '../../../../tests/mocks/card';
+import { scryfallCard, scryfallSet } from '../../../../tests/mocks/scryfall';
 import { userData } from '../../../../tests/mocks/user';
 import { InMemoryCardsRepository } from '../../../cards/repository/in-memory-collections-repository';
 import { InMemoryScryfallRepository } from '../../../scryfall/repositories/in-memory-scryfall-repository';
@@ -17,7 +17,7 @@ describe('[unit] Update cards', () => {
   beforeEach(() => {
     cardsRepository = new InMemoryCardsRepository();
     usersRepository = new InMemoryUsersRepository();
-    scryfallRepository = new InMemoryScryfallRepository(scryfallCard);
+    scryfallRepository = new InMemoryScryfallRepository(scryfallCard, scryfallSet);
     collectionsRepository = new InMemoryCollectionsRepository(cardsRepository);
     updateCardsUseCase = new UpdateCardsUseCase(cardsRepository, scryfallRepository, collectionsRepository);
   });

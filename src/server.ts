@@ -10,12 +10,13 @@ import { ErrorInterceptor as formatError } from './middlewares/error-interceptor
 import { AuthResolver } from './resolvers/auth-resolver';
 import { CardResolver } from './resolvers/card-resolver';
 import { CollectionResolver } from './resolvers/collection-resolver';
+import { SetResolver } from './resolvers/set-resolver';
 import { UserResolver } from './resolvers/user-resolver';
 import { Context } from './types/context';
 
 export const createApolloServer = async () => {
   const schema = await buildSchema({
-    resolvers: [UserResolver, AuthResolver, CollectionResolver, CardResolver],
+    resolvers: [UserResolver, AuthResolver, CollectionResolver, CardResolver, SetResolver],
     emitSchemaFile: resolve(__dirname, './schema.gql'),
     container: Container,
   });

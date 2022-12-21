@@ -42,6 +42,11 @@ input GetCardsFilters {
   name: String!
 }
 
+input GetSetsInput {
+  limit: Int!
+  page: Int!
+}
+
 type Mutation {
   addCard(data: AddCardInput!): Card!
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
@@ -50,8 +55,17 @@ type Mutation {
   updateUser(data: UpdateUserInput!): User!
 }
 
+type Pagination {
+  currentPage: Int!
+  lastPage: Int!
+  nextPage: Int
+  prevPage: Int
+  totalItems: Int!
+}
+
 type Query {
   cards(data: GetCardsFilters!): [ScryfallCardModel!]!
+  sets(data: GetSetsInput!): ScryfallSetModel!
   user: User!
 }
 
@@ -59,6 +73,19 @@ type ScryfallCardModel {
   id: String!
   imageUrl: String!
   name: String!
+}
+
+type ScryfallSetModel {
+  items: [Set!]!
+  pagination: Pagination!
+}
+
+type Set {
+  code: String!
+  iconUrl: String!
+  id: String!
+  name: String!
+  releasedAt: String!
 }
 
 input UpdateCardsInput {

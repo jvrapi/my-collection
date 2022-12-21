@@ -43,3 +43,24 @@ export const getCardsQuery = gql`
   }
 
 `;
+
+export const getSetsQuery = gql`
+  query Sets($data: GetSetsInput!) {
+    sets(data: $data) {
+      items {
+        id,
+        name,
+        code,
+        iconUrl,
+        releasedAt
+      },
+      pagination {
+        currentPage,
+        lastPage,
+        nextPage,
+        prevPage,
+        totalItems
+      }
+    }
+  }
+`;
