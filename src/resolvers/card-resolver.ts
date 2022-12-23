@@ -13,9 +13,11 @@ export class CardResolver {
   ) {}
 
   @Query(() => [ScryfallCardModel])
-  async cards(@Arg('data') { name }: GetCardsFilters) {
+  async cards(@Arg('data') { name, setCode, cardType }: GetCardsFilters) {
     return this.getCardsUseCase.execute({
       name,
+      setCode,
+      cardType
     });
   }
 }

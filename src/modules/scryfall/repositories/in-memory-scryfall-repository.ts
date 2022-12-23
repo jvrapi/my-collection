@@ -1,4 +1,7 @@
-import { Card, ScryfallRepository, Set } from './scryfall-repository';
+import { Types } from '../../../types/card-types';
+import {
+  Card, ScryfallRepository, Set
+} from './scryfall-repository';
 
 export class InMemoryScryfallRepository implements ScryfallRepository {
   private cards: Card[] = [];
@@ -8,6 +11,16 @@ export class InMemoryScryfallRepository implements ScryfallRepository {
   constructor(card: Card, set: Set) {
     this.cards.push(card);
     this.sets.push(set);
+  }
+
+  async findCardsByCardType(types: Types[]): Promise<Card[]> {
+    return this.cards.filter((card) => types.some((type) => card.type.toLowerCase().includes(type.toLowerCase())));
+  }
+
+  async findCardsBySetCode(setCode: string): Promise<Card[]> {
+    const set = this.sets.find((item) => item.code === setCode);
+
+    return this.cards.filter((card) => card.setId === set?.id);
   }
 
   async findCardById(id: string): Promise<Card | null> {

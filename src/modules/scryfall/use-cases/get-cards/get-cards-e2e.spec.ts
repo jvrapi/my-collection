@@ -9,10 +9,6 @@ describe('[e2e] Get cards by name', () => {
   let testServer: ApolloServer<Context>;
   let serverUrl: string;
 
-  const data = {
-    name: 'exploration',
-  };
-
   beforeAll(async () => {
     const { server, url } = await createApolloServer();
     testServer = server;
@@ -23,7 +19,11 @@ describe('[e2e] Get cards by name', () => {
     await testServer.stop();
   });
 
-  it('should be able to get a list of cards', async () => {
+  it('should be able to get a list of cards filtering by name', async () => {
+    const data = {
+      name: 'exploration',
+    };
+
     const getCardsResponse = await request<ScryfallCards>(serverUrl)
       .query(getCardsQuery)
       .variables({ data });
@@ -32,18 +32,41 @@ describe('[e2e] Get cards by name', () => {
     expect(getCardsResponse.data?.cards).toHaveLength(3);
   });
 
-  it('should not be able to get a cards without a name', async () => {
+  it('should be able to get a list of cards filtering by set code', async () => {
+    const data = {
+      setCode: 'DMU',
+    };
+
+    const getCardsResponse = await request<ScryfallCards>(serverUrl)
+      .query(getCardsQuery)
+      .variables({ data });
+
+    expect(getCardsResponse.errors).toBeUndefined();
+    expect(getCardsResponse.data?.cards.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('should be able to get a list of cards filtering by set code', async () => {
+    const data = {
+      cardType: ['Artifact'],
+    };
+
+    const getCardsResponse = await request<ScryfallCards>(serverUrl)
+      .query(getCardsQuery)
+      .variables({ data });
+
+    expect(getCardsResponse.errors).toBeUndefined();
+    expect(getCardsResponse.data?.cards.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('should not be able to get a cards without an filter', async () => {
     const getCardsResponse = await request<ScryfallCards>(serverUrl)
       .query(getCardsQuery)
       .variables({
-        data: {
-          name: '',
-        },
+        data: {},
       });
 
     expect(getCardsResponse.errors).toBeDefined();
     expect(getCardsResponse.data).toBeNull();
-    expect(getCardsResponse.errors![0].message).toBe('You need to provide a card name');
     expect(getCardsResponse.errors![0].extensions.status).toBe('400');
   });
 
