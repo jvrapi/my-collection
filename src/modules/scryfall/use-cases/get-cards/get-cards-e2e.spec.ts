@@ -45,7 +45,7 @@ describe('[e2e] Get cards by name', () => {
     expect(getCardsResponse.data?.cards.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should be able to get a list of cards filtering by set code', async () => {
+  it('should be able to get a list of cards filtering by type', async () => {
     const data = {
       cardType: ['Artifact'],
     };

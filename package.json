@@ -9,11 +9,13 @@
     "test:e2e": "jest --config jest-e2e.config.ts --detectOpenHandles --forceExit",
     "test:unit": "jest --config jest-unit.config.ts",
     "pretest:e2e": "docker compose up -d",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "debug": "tsnd --inspect --respawn --transpile-only --ignore-watch node_modules src/index.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.2.1",
     "@prisma/client": "4.6.1",
+    "axios": "1.1.3",
     "bcrypt": "^5.1.0",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
@@ -22,7 +24,6 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "scryfall-sdk": "^3.2.1",
     "type-graphql": "2.0.0-beta.1",
     "typedi": "^0.10.0"
   },

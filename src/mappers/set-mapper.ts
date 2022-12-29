@@ -1,4 +1,4 @@
-import { Set as ScryfallSet } from 'scryfall-sdk';
+import { Set as ScryfallSet } from '../modules/scryfall/types/set';
 import { Set } from '../modules/scryfall/repositories/scryfall-repository';
 
 export class SetMapper {
