@@ -36,9 +36,18 @@ export const getUserCardsQuery = gql`
 export const getCardsQuery = gql`
   query Cards($data: GetCardsFilters!){
     cards(data: $data) {
-      id,
-      imageUrl,
-      name
+      items {
+        id,
+        imageUrl,
+        name
+      },
+      pagination {
+        currentPage,
+        lastPage,
+        nextPage,
+        prevPage,
+        totalItems
+      }
     }
   }
 

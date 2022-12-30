@@ -1,7 +1,7 @@
 import Container from 'typedi';
 import { PrismaCardsRepository } from './modules/cards/repository/prisma-collections-repository';
 import { PrismaCollectionsRepository } from './modules/collection/repositories/prisma-collections-repository';
-import { SdkScryfallRepository } from './modules/scryfall/repositories/sdk-scryfall-repository';
+import { ApiScryfallRepository } from './modules/scryfall/repositories/api-scryfall-repository';
 import { PrismaUsersRepository } from './modules/users/repositories/prisma-users-repository';
 import { PaginationProvider } from './providers/pagination/pagination-provider';
 import { BcryptPasswordProvider } from './providers/password/bcrypt-password-provider';
@@ -11,7 +11,7 @@ import { JwtTokenProvider } from './providers/token/jwt-token-provider';
 Container.set('UsersRepository', new PrismaUsersRepository());
 Container.set('CollectionsRepository', new PrismaCollectionsRepository());
 Container.set('CardsRepository', new PrismaCardsRepository());
-Container.set('ScryfallRepository', new SdkScryfallRepository());
+Container.set('ScryfallRepository', new ApiScryfallRepository());
 
 // providers
 Container.set('BcryptProvider', new BcryptPasswordProvider());

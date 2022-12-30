@@ -1,12 +1,13 @@
 import { Inject, Service } from 'typedi';
-import { ApiError } from '../../../../errors/Error';
+import { PaginationProvider } from '../../../../providers/pagination/pagination-provider';
 import { Types } from '../../../../types/card-types';
-import { Card, ScryfallRepository } from '../../repositories/scryfall-repository';
+import { CardsList, ScryfallRepository } from '../../repositories/scryfall-repository';
 
 interface GetCardsFilters {
   name?: string,
   setCode?: string,
-  cardType?: Types[]
+  cardType?: Types[],
+  page: number
 }
 
 @Service()
@@ -14,23 +15,29 @@ export class GetCardsUseCase {
   constructor(
     @Inject('ScryfallRepository')
     private scryfallRepository: ScryfallRepository,
+    @Inject('PaginationProvider')
+    private pagination: PaginationProvider
   ) {}
 
-  async execute({ name, setCode, cardType }: GetCardsFilters) {
-    if (!name && !setCode && !cardType) {
-      throw new ApiError('You need to provide an filter');
-    }
-
-    let cards: Card[] = [];
+  async execute({
+    name, setCode, cardType, page
+  }: GetCardsFilters) {
+    let cards: CardsList = await this.scryfallRepository.getRandomCards();
 
     if (name) {
-      cards = await this.scryfallRepository.findCardsByName(name);
+      cards = await this.scryfallRepository.findCardsByName(name, page);
     } else if (setCode) {
-      cards = await this.scryfallRepository.findCardsBySetCode(setCode);
+      cards = await this.scryfallRepository.findCardsBySetCode(setCode, page);
     } else if (cardType) {
-      cards = await this.scryfallRepository.findCardsByCardType(cardType);
+      cards = await this.scryfallRepository.findCardsByCardType(cardType, page);
     }
 
-    return cards;
+    const cardsPaginated = this.pagination.getDataPaginated({
+      data: cards.data,
+      dataTotalLength: cards.total_cards ?? 0,
+      limit: 175,
+      page
+    });
+    return cardsPaginated;
   }
 }

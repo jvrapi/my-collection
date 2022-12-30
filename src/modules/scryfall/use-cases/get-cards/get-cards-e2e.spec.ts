@@ -22,6 +22,7 @@ describe('[e2e] Get cards by name', () => {
   it('should be able to get a list of cards filtering by name', async () => {
     const data = {
       name: 'exploration',
+      page: 1
     };
 
     const getCardsResponse = await request<ScryfallCards>(serverUrl)
@@ -29,12 +30,13 @@ describe('[e2e] Get cards by name', () => {
       .variables({ data });
 
     expect(getCardsResponse.errors).toBeUndefined();
-    expect(getCardsResponse.data?.cards).toHaveLength(3);
+    expect(getCardsResponse.data?.cards.items).toHaveLength(1);
   });
 
   it('should be able to get a list of cards filtering by set code', async () => {
     const data = {
       setCode: 'DMU',
+      page: 1
     };
 
     const getCardsResponse = await request<ScryfallCards>(serverUrl)
@@ -42,12 +44,13 @@ describe('[e2e] Get cards by name', () => {
       .variables({ data });
 
     expect(getCardsResponse.errors).toBeUndefined();
-    expect(getCardsResponse.data?.cards.length).toBeGreaterThanOrEqual(1);
+    expect(getCardsResponse.data?.cards.items.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should be able to get a list of cards filtering by type', async () => {
     const data = {
       cardType: ['Artifact'],
+      page: 1
     };
 
     const getCardsResponse = await request<ScryfallCards>(serverUrl)
@@ -55,31 +58,6 @@ describe('[e2e] Get cards by name', () => {
       .variables({ data });
 
     expect(getCardsResponse.errors).toBeUndefined();
-    expect(getCardsResponse.data?.cards.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it('should not be able to get a cards without an filter', async () => {
-    const getCardsResponse = await request<ScryfallCards>(serverUrl)
-      .query(getCardsQuery)
-      .variables({
-        data: {},
-      });
-
-    expect(getCardsResponse.errors).toBeDefined();
-    expect(getCardsResponse.data).toBeNull();
-    expect(getCardsResponse.errors![0].extensions.status).toBe('400');
-  });
-
-  it('should not be able to get a non exists card', async () => {
-    const getCardsResponse = await request<ScryfallCards>(serverUrl)
-      .query(getCardsQuery)
-      .variables({
-        data: {
-          name: 'wrong_name',
-        },
-      });
-
-    expect(getCardsResponse.errors).toBeUndefined();
-    expect(getCardsResponse.data?.cards).toHaveLength(0);
+    expect(getCardsResponse.data?.cards.items.length).toBeGreaterThanOrEqual(1);
   });
 });

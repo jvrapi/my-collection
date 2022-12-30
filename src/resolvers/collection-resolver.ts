@@ -4,7 +4,7 @@ import {
 import { Inject, Service } from 'typedi';
 import { AddCardInput } from '../dtos/inputs/add-card-input';
 import { UpdateCardsInput } from '../dtos/inputs/update-cards-input';
-import { Card } from '../dtos/models/card-model';
+import { UserCardModel } from '../dtos/models/user-card-model';
 import { EnsureAuthenticated } from '../middlewares/ensure-authenticated';
 import { EnsureRegistered } from '../middlewares/ensure-registered';
 import { AddCardToCollectionUseCase } from '../modules/collection/use-cases/add-card/add-card-use-case';
@@ -21,7 +21,7 @@ export class CollectionResolver {
     private updateCardsUseCase: UpdateCardsUseCase,
   ) {}
 
-  @Mutation(() => Card)
+  @Mutation(() => UserCardModel)
   @UseMiddleware(EnsureAuthenticated, EnsureRegistered)
   async addCard(
   @Arg('data') data: AddCardInput,
@@ -36,7 +36,7 @@ export class CollectionResolver {
     });
   }
 
-  @Mutation(() => [Card])
+  @Mutation(() => [UserCardModel])
   @UseMiddleware(EnsureAuthenticated, EnsureRegistered)
   async updateCards(
   @Arg('data', (type) => [UpdateCardsInput]) data: [UpdateCardsInput],

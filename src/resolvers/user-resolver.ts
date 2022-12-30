@@ -4,7 +4,7 @@ import {
 import { Inject, Service } from 'typedi';
 import { CreateUserInput } from '../dtos/inputs/create-user-input';
 import { UpdateUserInput } from '../dtos/inputs/update-user-input';
-import { Card } from '../dtos/models/card-model';
+import { UserCardModel } from '../dtos/models/user-card-model';
 import { UserCreated } from '../dtos/models/user-created-model';
 import { User } from '../dtos/models/users-model';
 import { EnsureAuthenticated } from '../middlewares/ensure-authenticated';
@@ -38,7 +38,7 @@ export class UserResolver {
     return this.getUserUseCase.execute(ctx.user.id);
   }
 
-  @FieldResolver(() => [Card])
+  @FieldResolver(() => [UserCardModel])
   async cards(@Root() user: User) {
     return this.getCollectionUseCase.execute(user.id);
   }

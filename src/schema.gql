@@ -17,15 +17,6 @@ input AuthenticateUserInput {
   username: String!
 }
 
-type Card {
-  addedAt: DateTime!
-  id: String!
-  imageUrl: String!
-  name: String!
-  quantity: Float!
-  updatedAt: DateTime!
-}
-
 input CreateUserInput {
   email: String!
   name: String!
@@ -41,6 +32,7 @@ scalar DateTime
 input GetCardsFilters {
   cardType: [Types!]
   name: String
+  page: Int!
   setCode: String
 }
 
@@ -50,10 +42,10 @@ input GetSetsInput {
 }
 
 type Mutation {
-  addCard(data: AddCardInput!): Card!
+  addCard(data: AddCardInput!): UserCardModel!
   authenticateUser(data: AuthenticateUserInput!): AuthModel!
   createUser(data: CreateUserInput!): UserCreated!
-  updateCards(data: [UpdateCardsInput!]!): [Card!]!
+  updateCards(data: [UpdateCardsInput!]!): [UserCardModel!]!
   updateUser(data: UpdateUserInput!): User!
 }
 
@@ -66,7 +58,7 @@ type Pagination {
 }
 
 type Query {
-  cards(data: GetCardsFilters!): [ScryfallCardModel!]!
+  cards(data: GetCardsFilters!): ScryfallPaginatedCardModel!
   sets(data: GetSetsInput!): ScryfallSetModel!
   user: User!
 }
@@ -75,6 +67,11 @@ type ScryfallCardModel {
   id: String!
   imageUrl: String!
   name: String!
+}
+
+type ScryfallPaginatedCardModel {
+  items: [ScryfallCardModel!]!
+  pagination: Pagination!
 }
 
 type ScryfallSetModel {
@@ -508,13 +505,22 @@ input UpdateUserInput {
 }
 
 type User {
-  cards: [Card!]!
+  cards: [UserCardModel!]!
   createdAt: DateTime!
   email: String!
   id: String!
   name: String!
   updatedAt: DateTime!
   username: String!
+}
+
+type UserCardModel {
+  addedAt: DateTime!
+  id: String!
+  imageUrl: String!
+  name: String!
+  quantity: Float!
+  updatedAt: DateTime!
 }
 
 type UserCreated {

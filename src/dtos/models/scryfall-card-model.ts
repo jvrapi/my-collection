@@ -1,13 +1,5 @@
-import { Field, ObjectType } from 'type-graphql';
+import { ObjectType } from 'type-graphql';
+import { BaseCardModel } from './base-card-model';
 
 @ObjectType()
-export class ScryfallCardModel {
-  @Field()
-    id: string;
-
-  @Field()
-    name: string;
-
-  @Field()
-    imageUrl: string;
-}
+export class ScryfallCardModel extends BaseCardModel {}
