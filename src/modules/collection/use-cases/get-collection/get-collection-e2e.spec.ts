@@ -19,6 +19,11 @@ describe('[e2e] Get cards', () => {
     password: userData.password,
   };
 
+  const filters = {
+    page: 1,
+    limit: 5
+  };
+
   beforeAll(async () => {
     const { server, url } = await createApolloServer();
     testServer = server;
@@ -31,7 +36,8 @@ describe('[e2e] Get cards', () => {
 
   it('should not be able to get user cards without an token', async () => {
     const getCardsResponse = await request(serverUrl)
-      .query(getUserCardsQuery);
+      .query(getUserCardsQuery)
+      .variables({ data: filters });
 
     expect(getCardsResponse.errors).toBeDefined();
     expect(getCardsResponse.errors![0].extensions.status).toBe('401');
@@ -51,7 +57,8 @@ describe('[e2e] Get cards', () => {
 
     const getCardsResponse = await request(serverUrl)
       .query(getUserCardsQuery)
-      .set('authorization', `Bearer ${token}`);
+      .set('authorization', `Bearer ${token}`)
+      .variables({ data: filters });
 
     expect(getCardsResponse.errors).toBeDefined();
     expect(getCardsResponse.errors![0].extensions.status).toBe('401');
@@ -66,8 +73,9 @@ describe('[e2e] Get cards', () => {
     const token = tokenProvider.generateToken({ userId: randomUUID() });
 
     const getCardsResponse = await request(serverUrl)
-      .mutate(getUserCardsQuery)
-      .set('authorization', `Bearer ${token}`);
+      .query(getUserCardsQuery)
+      .set('authorization', `Bearer ${token}`)
+      .variables({ data: filters });
 
     expect(getCardsResponse.errors).toBeDefined();
     expect(getCardsResponse.errors![0].extensions.status).toBe('401');
@@ -97,9 +105,11 @@ describe('[e2e] Get cards', () => {
 
     const getUserCardsResponse = await request<User>(serverUrl)
       .query(getUserCardsQuery)
+      .variables({ data: filters })
       .set('Authorization', `Bearer ${token}`);
 
-    expect(getUserCardsResponse.data?.user.cards).toHaveLength(1);
+    expect(getUserCardsResponse.data?.user.cards.items).toHaveLength(1);
+    expect(getUserCardsResponse.data?.user.cards.pagination).toBeDefined();
   });
 
   it('should be able to get user collection with no cards', async () => {
@@ -127,8 +137,9 @@ describe('[e2e] Get cards', () => {
 
     const getUserCardsResponse = await request<User>(serverUrl)
       .query(getUserCardsQuery)
+      .variables({ data: filters })
       .set('Authorization', `Bearer ${token}`);
 
-    expect(getUserCardsResponse.data?.user.cards).toHaveLength(0);
+    expect(getUserCardsResponse.data?.user.cards.items).toHaveLength(0);
   });
 });

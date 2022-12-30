@@ -38,7 +38,7 @@ export class AddCardToCollectionUseCase {
       throw new ApiError('Invalid card');
     }
 
-    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId);
+    const userCollection = await this.collectionsRepository.findCollectionByUserId({ userId, page: 1, limit: 1 });
 
     const cardAlreadyInCollection = await this.cardsRepository.findByCardIdAndCollectionId({
       scryfallCardId,

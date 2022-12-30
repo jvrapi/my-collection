@@ -505,7 +505,7 @@ input UpdateUserInput {
 }
 
 type User {
-  cards: [UserCardModel!]!
+  cards(data: UserCollectionFilters!): UserCardsModel!
   createdAt: DateTime!
   email: String!
   id: String!
@@ -521,6 +521,16 @@ type UserCardModel {
   name: String!
   quantity: Float!
   updatedAt: DateTime!
+}
+
+type UserCardsModel {
+  items: [UserCardModel!]!
+  pagination: Pagination!
+}
+
+input UserCollectionFilters {
+  limit: Int!
+  page: Int!
 }
 
 type UserCreated {

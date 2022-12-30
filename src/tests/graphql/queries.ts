@@ -14,7 +14,7 @@ export const getUsersQuery = gql`
 `;
 
 export const getUserCardsQuery = gql`
-  query getUserCards{
+  query getUserCards($data: UserCollectionFilters!){
     user{
       id,
       name,
@@ -22,12 +22,21 @@ export const getUserCardsQuery = gql`
       email,
       createdAt
       updatedAt,
-      cards {
-        id,
-        imageUrl,
-        quantity,
-        addedAt,
-        updatedAt
+      cards(data: $data) {
+        items {
+          id,
+         imageUrl,
+          quantity,
+          addedAt,
+          updatedAt
+        },
+        pagination {
+          currentPage,
+          lastPage,
+          nextPage,
+          prevPage,
+          totalItems
+        }
       }
     }
   }

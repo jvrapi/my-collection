@@ -3,6 +3,7 @@ import { Pagination } from '../../dtos/models/pagination-model';
 import { ScryfallCardModel } from '../../dtos/models/scryfall-card-model';
 import { Set } from '../../dtos/models/set-model';
 import { User as UserModel } from '../../dtos/models/users-model';
+import { UserCardsModel } from '../../dtos/models/user-cards-model';
 
 interface ItensPaginated<T> {
   items: T[]
@@ -25,7 +26,7 @@ export interface UserAuthenticated {
 
 export interface User {
   user: UserModel & {
-    cards: UserCardModel[]
+    cards: UserCardsModel
   }
 }
 

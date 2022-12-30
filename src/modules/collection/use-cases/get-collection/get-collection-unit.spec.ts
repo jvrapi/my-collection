@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { PaginationProvider } from '../../../../providers/pagination/pagination-provider';
 import { scryfallCard, scryfallSet } from '../../../../tests/mocks/scryfall';
 import { InMemoryCardsRepository } from '../../../cards/repository/in-memory-collections-repository';
 import { InMemoryScryfallRepository } from '../../../scryfall/repositories/in-memory-scryfall-repository';
@@ -15,7 +16,8 @@ describe('[unit] Get collection', () => {
     cardsRepository = new InMemoryCardsRepository();
     collectionsRepository = new InMemoryCollectionsRepository(cardsRepository);
     scryfallRepository = new InMemoryScryfallRepository(scryfallCard, scryfallSet);
-    getCollectionUseCase = new GetCollectionUseCase(collectionsRepository, scryfallRepository);
+    const pagination = new PaginationProvider();
+    getCollectionUseCase = new GetCollectionUseCase(collectionsRepository, scryfallRepository, pagination);
   });
 
   it('should be able to list user cards', async () => {
@@ -29,9 +31,9 @@ describe('[unit] Get collection', () => {
       collectionId,
     });
 
-    const userCards = await getCollectionUseCase.execute(userId);
+    const userCards = await getCollectionUseCase.execute({ userId, page: 1, limit: 5 });
 
-    expect(userCards.length).toBe(1);
+    expect(userCards.items.length).toBe(1);
   });
 
   it('should be able to get user collection with no cards', async () => {
@@ -39,8 +41,8 @@ describe('[unit] Get collection', () => {
 
     await collectionsRepository.create(userId);
 
-    const userCards = await getCollectionUseCase.execute(userId);
+    const userCards = await getCollectionUseCase.execute({ userId, page: 1, limit: 5 });
 
-    expect(userCards).toHaveLength(0);
+    expect(userCards.items).toHaveLength(0);
   });
 });

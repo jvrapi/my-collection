@@ -1,15 +1,18 @@
 import { Collection as CollectionModel } from '@prisma/client';
 import { prisma } from '../../../database/prisma';
-import { Collection, CollectionsRepository } from './collections-repository';
+import { Collection, CollectionsRepository, FindCollectionByUserId } from './collections-repository';
 
 export class PrismaCollectionsRepository implements CollectionsRepository {
-  async findCollectionByUserId(userId: string): Promise<Collection | null> {
+  async findCollectionByUserId({ userId, limit, page }:FindCollectionByUserId): Promise<Collection | null> {
     return prisma.collection.findUnique({
       where: {
         userId,
       },
       include: {
-        card: true,
+        card: {
+          take: limit,
+          skip: (page - 1) * limit,
+        },
       },
     });
   }
@@ -19,6 +22,14 @@ export class PrismaCollectionsRepository implements CollectionsRepository {
       data: {
         userId,
       },
+    });
+  }
+
+  countCardsInUserCollection(userId: string): Promise<number> {
+    return prisma.collection.count({
+      where: {
+        userId
+      }
     });
   }
 }

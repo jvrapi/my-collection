@@ -4,7 +4,9 @@ import {
 import { Inject, Service } from 'typedi';
 import { CreateUserInput } from '../dtos/inputs/create-user-input';
 import { UpdateUserInput } from '../dtos/inputs/update-user-input';
+import { UserCollectionFilters } from '../dtos/inputs/user-collection-filters';
 import { UserCardModel } from '../dtos/models/user-card-model';
+import { UserCardsModel } from '../dtos/models/user-cards-model';
 import { UserCreated } from '../dtos/models/user-created-model';
 import { User } from '../dtos/models/users-model';
 import { EnsureAuthenticated } from '../middlewares/ensure-authenticated';
@@ -38,11 +40,6 @@ export class UserResolver {
     return this.getUserUseCase.execute(ctx.user.id);
   }
 
-  @FieldResolver(() => [UserCardModel])
-  async cards(@Root() user: User) {
-    return this.getCollectionUseCase.execute(user.id);
-  }
-
   @Mutation(() => UserCreated)
   async createUser(@Arg('data') data: CreateUserInput) {
     return this.createUserUseCase.execute(data);
@@ -58,6 +55,16 @@ export class UserResolver {
     return this.updateUserUseCase.execute({
       ...data,
       id: ctx.user.id,
+    });
+  }
+
+  @FieldResolver(() => UserCardsModel)
+  async cards(@Root() user: User, @Arg('data') data: UserCollectionFilters) {
+    const { limit, page } = data;
+    return this.getCollectionUseCase.execute({
+      userId: user.id,
+      limit,
+      page
     });
   }
 }

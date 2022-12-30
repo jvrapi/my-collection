@@ -32,7 +32,7 @@ export class UpdateCardsUseCase {
       throw new ApiError('You need to provide at least an card to be updated');
     }
 
-    const userCollection = await this.collectionsRepository.findCollectionByUserId(userId);
+    const userCollection = await this.collectionsRepository.findCollectionByUserId({ userId, page: 1, limit: 1 });
 
     await Promise.all(cards.map(async (card) => {
       const cardInCollection = await this.cardsRepository.findByCardIdAndCollectionId({
