@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from 'type-graphql';
 
 @InputType()
-export class UserCollectionFilters {
+export class UserCollectionInput {
   @Field(() => Int)
     page: number;
 

@@ -1,8 +1,8 @@
 import { Field, ObjectType } from 'type-graphql';
-import { BaseCardModel } from './base-card-model';
+import { BaseCardModel } from '../../../../dtos/models/base-card-model';
 
 @ObjectType()
-export class UserCardModel extends BaseCardModel {
+export class UserCard extends BaseCardModel {
   @Field()
     addedAt: Date;
 

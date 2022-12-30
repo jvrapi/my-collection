@@ -1,9 +1,9 @@
-import { UserCardModel } from '../../dtos/models/user-card-model';
 import { Pagination } from '../../dtos/models/pagination-model';
-import { ScryfallCardModel } from '../../dtos/models/scryfall-card-model';
-import { Set } from '../../dtos/models/set-model';
-import { User as UserModel } from '../../dtos/models/users-model';
-import { UserCardsModel } from '../../dtos/models/user-cards-model';
+import { Card } from '../../modules/scryfall/dtos/models/card-model';
+import { Set } from '../../modules/scryfall/dtos/models/set-model';
+import { UserCard } from '../../modules/users/dtos/models/card-model';
+import { UserCards } from '../../modules/users/dtos/models/cards-model';
+import { User as UserModel } from '../../modules/users/dtos/models/user-model';
 
 interface ItensPaginated<T> {
   items: T[]
@@ -26,23 +26,23 @@ export interface UserAuthenticated {
 
 export interface User {
   user: UserModel & {
-    cards: UserCardsModel
+    cards: UserCards
   }
 }
 
 export interface CardAdded {
-  addCard: UserCardModel
+  addCard: UserCard
 }
 
 export interface CardUpdated {
-  updateCards: UserCardModel[]
+  updateCards: UserCard[]
 }
 
 export interface ScryfallCards {
-  cards: ItensPaginated<ScryfallCardModel>
+  cards: ItensPaginated<Card>
 }
 
-export interface SCryfallSets {
+export interface ScryfallSets {
   sets: {
     items: Set[],
     pagination: Pagination

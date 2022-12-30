@@ -1,10 +1,9 @@
 import { Field, ObjectType } from 'type-graphql';
-import { Pagination } from './pagination-model';
-// import { Set } from '../../modules/scryfall/repositories/scryfall-repository';
+import { Pagination } from '../../../../dtos/models/pagination-model';
 import { Set } from './set-model';
 
 @ObjectType()
-export class ScryfallSetModel {
+export class Sets {
   @Field(() => [Set])
     items: [Set];
 

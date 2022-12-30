@@ -8,13 +8,24 @@ input AddCardInput {
   quantity: Float!
 }
 
-type AuthModel {
+type Auth {
   token: String!
 }
 
 input AuthenticateUserInput {
   password: String!
   username: String!
+}
+
+type Card {
+  id: String!
+  imageUrl: String!
+  name: String!
+}
+
+type Cards {
+  items: [Card!]!
+  pagination: Pagination!
 }
 
 input CreateUserInput {
@@ -29,7 +40,7 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
-input GetCardsFilters {
+input GetCardsInput {
   cardType: [Types!]
   name: String
   page: Int!
@@ -42,10 +53,10 @@ input GetSetsInput {
 }
 
 type Mutation {
-  addCard(data: AddCardInput!): UserCardModel!
-  authenticateUser(data: AuthenticateUserInput!): AuthModel!
+  addCard(data: AddCardInput!): UserCard!
+  authenticateUser(data: AuthenticateUserInput!): Auth!
   createUser(data: CreateUserInput!): UserCreated!
-  updateCards(data: [UpdateCardsInput!]!): [UserCardModel!]!
+  updateCards(data: [UpdateCardsInput!]!): [UserCard!]!
   updateUser(data: UpdateUserInput!): User!
 }
 
@@ -58,25 +69,9 @@ type Pagination {
 }
 
 type Query {
-  cards(data: GetCardsFilters!): ScryfallPaginatedCardModel!
-  sets(data: GetSetsInput!): ScryfallSetModel!
+  cards(data: GetCardsInput!): Cards!
+  sets(data: GetSetsInput!): Sets!
   user: User!
-}
-
-type ScryfallCardModel {
-  id: String!
-  imageUrl: String!
-  name: String!
-}
-
-type ScryfallPaginatedCardModel {
-  items: [ScryfallCardModel!]!
-  pagination: Pagination!
-}
-
-type ScryfallSetModel {
-  items: [Set!]!
-  pagination: Pagination!
 }
 
 type Set {
@@ -85,6 +80,11 @@ type Set {
   id: String!
   name: String!
   releasedAt: String!
+}
+
+type Sets {
+  items: [Set!]!
+  pagination: Pagination!
 }
 
 enum Types {
@@ -505,7 +505,7 @@ input UpdateUserInput {
 }
 
 type User {
-  cards(data: UserCollectionFilters!): UserCardsModel!
+  cards(data: UserCollectionInput!): UserCards!
   createdAt: DateTime!
   email: String!
   id: String!
@@ -514,7 +514,7 @@ type User {
   username: String!
 }
 
-type UserCardModel {
+type UserCard {
   addedAt: DateTime!
   id: String!
   imageUrl: String!
@@ -523,12 +523,12 @@ type UserCardModel {
   updatedAt: DateTime!
 }
 
-type UserCardsModel {
-  items: [UserCardModel!]!
+type UserCards {
+  items: [UserCard!]!
   pagination: Pagination!
 }
 
-input UserCollectionFilters {
+input UserCollectionInput {
   limit: Int!
   page: Int!
 }

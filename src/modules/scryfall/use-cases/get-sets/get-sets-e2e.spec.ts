@@ -2,7 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import request from 'supertest-graphql';
 import { createApolloServer } from '../../../../server';
 import { getSetsQuery } from '../../../../tests/graphql/queries';
-import { SCryfallSets } from '../../../../tests/graphql/types';
+import { ScryfallSets } from '../../../../tests/graphql/types';
 import { Context } from '../../../../types/context';
 
 describe('[e2e] Get sets', () => {
@@ -24,10 +24,10 @@ describe('[e2e] Get sets', () => {
       page: 1,
       limit: 5
     };
-    const response = await request<SCryfallSets>(serverUrl)
+    const response = await request<ScryfallSets>(serverUrl)
       .query(getSetsQuery)
       .variables({ data });
-
+      
     expect(response.data?.sets.items).toBeDefined();
     expect(response.data?.sets.pagination.currentPage).toBeDefined();
     expect(response.data?.sets.pagination.nextPage).toBeDefined();

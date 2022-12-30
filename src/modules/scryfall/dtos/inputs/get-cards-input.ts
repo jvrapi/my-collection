@@ -1,14 +1,14 @@
 import {
   Field, InputType, Int, registerEnumType
 } from 'type-graphql';
-import { Types } from '../../types/card-types';
+import { Types } from '../../../../types/card-types';
 
 registerEnumType(Types, {
   name: 'Types'
 });
 
 @InputType()
-export class GetCardsFilters {
+export class GetCardsInput {
   @Field({ nullable: true })
     name?: string;
 

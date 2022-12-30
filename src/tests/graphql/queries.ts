@@ -14,7 +14,7 @@ export const getUsersQuery = gql`
 `;
 
 export const getUserCardsQuery = gql`
-  query getUserCards($data: UserCollectionFilters!){
+  query getUserCards($data: UserCollectionInput!){
     user{
       id,
       name,
@@ -43,7 +43,7 @@ export const getUserCardsQuery = gql`
 `;
 
 export const getCardsQuery = gql`
-  query Cards($data: GetCardsFilters!){
+  query Cards($data: GetCardsInput!){
     cards(data: $data) {
       items {
         id,
