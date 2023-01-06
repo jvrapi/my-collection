@@ -1,8 +1,8 @@
 import { Inject, Service } from 'typedi';
-import { CreateUserInput } from '../../../../dtos/inputs/create-user-input';
 import { ApiError } from '../../../../errors/Error';
 import { PasswordProvider } from '../../../../providers/password/password-provider';
 import { CollectionsRepository } from '../../../collection/repositories/collections-repository';
+import { CreateUserInput } from '../../dtos/inputs/create-user-input';
 import { UsersRepository } from '../../repositories/users-repository';
 
 @Service()
@@ -19,7 +19,10 @@ export class CreateUserUseCase {
   ) {}
 
   async execute({
-    name, email, password, username,
+    name,
+    email,
+    password,
+    username,
   }: CreateUserInput) {
     const emailAlreadyInUse = await this.usersRepository.findByEmail(email);
     const usernameAlreadyInUse = await this.usersRepository.findByUsername(username);

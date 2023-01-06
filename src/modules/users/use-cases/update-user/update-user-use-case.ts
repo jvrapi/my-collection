@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
 import { Inject, Service } from 'typedi';
-import { UpdateUserInput } from '../../../../dtos/inputs/update-user-input';
 import { ApiError } from '../../../../errors/Error';
+import { UpdateUserInput } from '../../dtos/inputs/update-user-input';
 import { UsersRepository } from '../../repositories/users-repository';
 
 interface UpdateUserUseCaseRequest extends UpdateUserInput {

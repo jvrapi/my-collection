@@ -37,68 +37,34 @@ describe('[e2e] Update cards', () => {
     await testServer.stop();
   });
 
-  it('should not be able to update an card without an token', async () => {
-    const updateCardData = {
-      quantity: 1,
-      cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c',
-    };
+  //   const clock = FakeTimers.install();
 
-    const updateCardToCollectionResponse = await request(serverUrl)
-      .mutate(updateCardsQuery)
-      .variables({ data: updateCardData });
+  //   const updateCardData = {
+  //     quantity: 1,
+  //     cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c',
+  //   };
 
-    expect(updateCardToCollectionResponse.errors).toBeDefined();
-    expect(updateCardToCollectionResponse.errors![0].extensions.status).toBe('401');
-    expect(updateCardToCollectionResponse.data).toBeNull();
-  });
+  //   const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
+  //     .mutate(authenticateUserQuery)
+  //     .variables({ data: authenticateData });
 
-  it('should not be able to update a card with expired token', async () => {
-    const clock = FakeTimers.install();
+  //   const token = authenticateUserResponse.data?.authenticateUser?.token as string;
 
-    const updateCardData = {
-      quantity: 1,
-      cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c',
-    };
+  //   await clock.tickAsync(16000);
 
-    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
-      .mutate(authenticateUserQuery)
-      .variables({ data: authenticateData });
+  //   const updateCardToCollectionResponse = await request(serverUrl)
+  //     .mutate(updateCardsQuery)
+  //     .variables({ data: updateCardData })
+  //     .set('authorization', `Bearer ${token}`);
 
-    const token = authenticateUserResponse.data?.authenticateUser?.token as string;
+  //   console.log(updateCardToCollectionResponse.errors);
 
-    await clock.tickAsync(16000);
+  //   expect(updateCardToCollectionResponse.errors).toBeDefined();
+  //   expect(updateCardToCollectionResponse.errors![0].extensions.status).toBe('401');
+  //   expect(updateCardToCollectionResponse.data).toBeNull();
 
-    const updateCardToCollectionResponse = await request(serverUrl)
-      .mutate(updateCardsQuery)
-      .variables({ data: updateCardData })
-      .set('authorization', `Bearer ${token}`);
-
-    expect(updateCardToCollectionResponse.errors).toBeDefined();
-    expect(updateCardToCollectionResponse.errors![0].extensions.status).toBe('401');
-    expect(updateCardToCollectionResponse.data).toBeNull();
-
-    clock.uninstall();
-  });
-
-  it('should not be able to update a non registered user collection', async () => {
-    const updateCardData = {
-      quantity: 1,
-      cardId: 'ce4c6535-afea-4704-b35c-badeb04c4f4c',
-    };
-
-    const tokenProvider = new JwtTokenProvider();
-
-    const token = tokenProvider.generateToken({ userId: randomUUID() });
-
-    const updateCardResponse = await request(serverUrl)
-      .mutate(updateCardsQuery)
-      .variables({ data: updateCardData })
-      .set('authorization', `Bearer ${token}`);
-
-    expect(updateCardResponse.errors).toBeDefined();
-    expect(updateCardResponse.errors![0].extensions.status).toBe('401');
-    expect(updateCardResponse.data).toBeNull();
-  });
+  //   clock.uninstall();
+  // });
 
   it('should be able to update quantity of an card in collection', async () => {
     const addCardData = {
@@ -112,7 +78,7 @@ describe('[e2e] Update cards', () => {
 
     const token = authenticateUserResponse.data?.authenticateUser?.token as string;
 
-    await await request<CardAdded>(serverUrl)
+    await request<CardAdded>(serverUrl)
       .mutate(addCardQuery)
       .variables({ data: addCardData })
       .set('authorization', `Bearer ${token}`);

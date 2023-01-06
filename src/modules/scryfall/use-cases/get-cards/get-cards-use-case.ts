@@ -25,7 +25,7 @@ export class GetCardsUseCase {
     let cards: CardsList = await this.scryfallRepository.getRandomCards();
 
     if (name) {
-      cards = await this.scryfallRepository.findCardsByName(name, page);
+      cards = await this.scryfallRepository.findCardsByName(name);
     } else if (setCode) {
       cards = await this.scryfallRepository.findCardsBySetCode(setCode, page);
     } else if (cardType) {

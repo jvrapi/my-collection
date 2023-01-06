@@ -52,6 +52,7 @@ export class UpdateCardsUseCase {
         collectionId: userCollection!.id
       });
       const scryfallCard = await this.scryfallRepository.findCardById(cardId);
+
       return {
         id: card.scryfallId,
         quantity: card.quantity,

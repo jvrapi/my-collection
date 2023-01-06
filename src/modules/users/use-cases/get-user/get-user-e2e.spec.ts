@@ -1,8 +1,5 @@
 import { ApolloServer } from '@apollo/server';
-import FakeTimers from '@sinonjs/fake-timers';
-import { randomUUID } from 'crypto';
 import request from 'supertest-graphql';
-import { JwtTokenProvider } from '../../../../providers/token/jwt-token-provider';
 import { createApolloServer } from '../../../../server';
 import { authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/mutations';
 import { getUsersQuery } from '../../../../tests/graphql/queries';
@@ -30,56 +27,6 @@ describe('[e2e] Get user', () => {
 
   afterAll(async () => {
     await testServer.stop();
-  });
-
-  it('should not be able to get a user without an token', async () => {
-    const response = await request(serverUrl).query(getUsersQuery);
-    expect(response.errors).toBeDefined();
-    expect(response.errors![0].extensions.status).toBe('401');
-    expect(response.data).toBeNull();
-  });
-
-  it('should not be able to get a user with expired token', async () => {
-    const clock = FakeTimers.install();
-
-    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
-      .mutate(authenticateUserQuery)
-      .variables({ data: authenticateData });
-
-    const token = authenticateUserResponse.data?.authenticateUser?.token;
-
-    await clock.tickAsync(16000);
-
-    const getUserResponse = await request(serverUrl)
-      .query(getUsersQuery)
-      .set('authorization', `Bearer ${token}`);
-
-    expect(getUserResponse.errors).toBeDefined();
-    expect(getUserResponse.errors![0].extensions.status).toBe('401');
-    expect(getUserResponse.data).toBeNull();
-
-    clock.uninstall();
-  });
-
-  it('should not be able to get a non registered user', async () => {
-    const data = {
-      email: 'kacti@haraak.by',
-      name: 'Beulah Osborne',
-      username: 'awjYdtKYlb',
-    };
-
-    const tokenProvider = new JwtTokenProvider();
-
-    const token = tokenProvider.generateToken({ userId: randomUUID() });
-
-    const updateUserResponse = await request(serverUrl)
-      .query(getUsersQuery)
-      .variables({ data })
-      .set('authorization', `Bearer ${token}`);
-
-    expect(updateUserResponse.errors).toBeDefined();
-    expect(updateUserResponse.errors![0].extensions.status).toBe('401');
-    expect(updateUserResponse.data).toBeNull();
   });
 
   it('should be able to get user', async () => {

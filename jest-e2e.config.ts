@@ -1,4 +1,5 @@
 import jestConfig from './jest.config';
+import './src/tests/mocks/nock';
 
 export default {
   ...jestConfig,

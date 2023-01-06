@@ -27,7 +27,7 @@ describe('[e2e] Get sets', () => {
     const response = await request<ScryfallSets>(serverUrl)
       .query(getSetsQuery)
       .variables({ data });
-      
+
     expect(response.data?.sets.items).toBeDefined();
     expect(response.data?.sets.pagination.currentPage).toBeDefined();
     expect(response.data?.sets.pagination.nextPage).toBeDefined();

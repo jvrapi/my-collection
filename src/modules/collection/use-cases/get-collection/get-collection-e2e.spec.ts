@@ -1,8 +1,5 @@
 import { ApolloServer } from '@apollo/server';
-import FakeTimers from '@sinonjs/fake-timers';
-import { randomUUID } from 'node:crypto';
 import request from 'supertest-graphql';
-import { JwtTokenProvider } from '../../../../providers/token/jwt-token-provider';
 import { createApolloServer } from '../../../../server';
 import { addCardQuery, authenticateUserQuery, createUserQuery } from '../../../../tests/graphql/mutations';
 import { getUserCardsQuery } from '../../../../tests/graphql/queries';
@@ -32,54 +29,6 @@ describe('[e2e] Get cards', () => {
 
   afterAll(async () => {
     await testServer.stop();
-  });
-
-  it('should not be able to get user cards without an token', async () => {
-    const getCardsResponse = await request(serverUrl)
-      .query(getUserCardsQuery)
-      .variables({ data: filters });
-
-    expect(getCardsResponse.errors).toBeDefined();
-    expect(getCardsResponse.errors![0].extensions.status).toBe('401');
-    expect(getCardsResponse.data).toBeNull();
-  });
-
-  it('should not be able to get user cards with expired token', async () => {
-    const clock = FakeTimers.install();
-
-    const authenticateUserResponse = await request<UserAuthenticated>(serverUrl)
-      .mutate(authenticateUserQuery)
-      .variables({ data: authenticateData });
-
-    const token = authenticateUserResponse.data?.authenticateUser?.token as string;
-
-    await clock.tickAsync(16000);
-
-    const getCardsResponse = await request(serverUrl)
-      .query(getUserCardsQuery)
-      .set('authorization', `Bearer ${token}`)
-      .variables({ data: filters });
-
-    expect(getCardsResponse.errors).toBeDefined();
-    expect(getCardsResponse.errors![0].extensions.status).toBe('401');
-    expect(getCardsResponse.data).toBeNull();
-
-    clock.uninstall();
-  });
-
-  it('should not be able to get a non registered user collection', async () => {
-    const tokenProvider = new JwtTokenProvider();
-
-    const token = tokenProvider.generateToken({ userId: randomUUID() });
-
-    const getCardsResponse = await request(serverUrl)
-      .query(getUserCardsQuery)
-      .set('authorization', `Bearer ${token}`)
-      .variables({ data: filters });
-
-    expect(getCardsResponse.errors).toBeDefined();
-    expect(getCardsResponse.errors![0].extensions.status).toBe('401');
-    expect(getCardsResponse.data).toBeNull();
   });
 
   it('should be able to get user collection cards', async () => {

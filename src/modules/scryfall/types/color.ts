@@ -6,4 +6,4 @@ export enum Colors {
   G = 4
 }
 
-export type Color = keyof typeof Colors
+export type Color = keyof typeof Colors;
