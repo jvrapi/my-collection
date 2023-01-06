@@ -1,8 +1,6 @@
 import { ApolloServer } from '@apollo/server';
-import FakeTimers from '@sinonjs/fake-timers';
 import { randomUUID } from 'node:crypto';
 import request from 'supertest-graphql';
-import { JwtTokenProvider } from '../../../../providers/token/jwt-token-provider';
 import { createApolloServer } from '../../../../server';
 import {
   addCardQuery,

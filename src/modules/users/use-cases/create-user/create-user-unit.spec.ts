@@ -1,7 +1,6 @@
 import { BcryptPasswordProvider } from '../../../../providers/password/bcrypt-password-provider';
 import { PasswordProvider } from '../../../../providers/password/password-provider';
 import { userData } from '../../../../tests/mocks/user';
-import { CardsRepository } from '../../../cards/repository/cards-repository';
 import { InMemoryCardsRepository } from '../../../cards/repository/in-memory-collections-repository';
 import { CollectionsRepository } from '../../../collection/repositories/collections-repository';
 import { InMemoryCollectionsRepository } from '../../../collection/repositories/in-memory-collections-repository';
